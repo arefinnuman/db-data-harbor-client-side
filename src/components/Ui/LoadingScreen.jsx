@@ -1,9 +1,9 @@
 const LoadingScreen = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="text-center">
+    <div className="flex items-center justify-center min-h-screen ">
+      <div className="text-center p-10 rounded-lg bg-opacity-10 backdrop-blur-md shadow-xl bg-gradient-to-br from-yellow-200 to-yellow-500">
         <svg
-          className="animate-spin h-16 w-16 mx-auto mb-4 text-secondary-focus"
+          className="animate-spin h-16 w-16 mx-auto mb-4 text-primary shadow-3xl"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -22,14 +22,12 @@ const LoadingScreen = () => {
             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.845 3 7.97l3-2.678z"
           ></path>
         </svg>
-        <div className="animate-spin-slow">
-          <h1 className="text-3xl font-semibold mb-2">Loading...</h1>
-        </div>
-
-        <div className="text-lg opacity-70 text-center animate-bounce mt-5">
+        <h1 className="text-3xl font-semibold mb-2 animate-spin-slow ">
+          Loading...
+        </h1>
+        <div className="text-lg opacity-70 text-center  mt-5 ">
           Your experience is worth the wait.
         </div>
-        <p className="text-lg opacity-75"></p>
       </div>
     </div>
   );
