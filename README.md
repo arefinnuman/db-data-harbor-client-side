@@ -1,39 +1,58 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# _DBDataHarbor: Eastern Bank Limited's Digital Banking MIS Project_
 
-## Getting Started
+### Introduction:
 
-First, run the development server:
+DBDataHarbor stands as a testament to Eastern Bank Limited's commitment to digital transformation and efficiency. The name symbolises a safe haven for data, suggesting both security and a centralised location for information.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+### Project Vision:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+To create a unified digital platform that centralises information on ATM booths and bank employees, ensuring a streamlined operation for the bank's digital services, improved accessibility for stakeholders, and bolstered security for sensitive information.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+### Main Goal:
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+It is used to manage all the ATM booths and their utility bills. It contains every bit of information about ATM booths. It will calculate the day's cost per ATM booth.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Requirement Analysis
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+It will have two types of users.
 
-## Learn More
+1. Admin.
+2. User
 
-To learn more about Next.js, take a look at the following resources:
+## Functional Requirement
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Features of User
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+In this project, The User has the following features:
 
-## Deploy on Vercel
+1. Users can login to their accounts.
+2. Users can edit their profiles.
+3. Users can change their password.
+4. Users can log out of their profiles.
+5. Users have multiple types for their teams.
+6. Users can only access their teams operations.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+There will be three types of operations.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-# db-data-harbor-client-side
+1. It will manage and handle the ATM booths.
+2. It will manage the costing of ATM booths, such as utilities bills
+3. It will manage the user information that is allowed to be shown.
+
+### Features of Admin
+
+In this project, The Admin has the following features:
+
+1. Admins can create a user.
+2. Admins can create another admin
+3. Admins can login to their accounts.
+4. Admins can change their password.
+5. Admins can also log out of their accounts.
+6. Admins can manage each and every team's operations.
+7. Admins can manage each and every user.
+
+### Benefits of DBDataHarbor:
+
+- Operational Efficiency: Centralising data reduces redundancy and streamlines bank operations.
+- Improved Decision Making: Access to data analytics provides insights for strategic planning.
+- Boosted Employee Morale: A clear organisational structure and easily accessible employee data can enhance internal communications and camaraderie.
+
