@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function PrimaryButton({ children, onClick }) {
+function TableButton({ children, onClick }) {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -8,8 +8,8 @@ function PrimaryButton({ children, onClick }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={onClick}
-      className={`relative bg-gradient-to-r from-yellow-500 to-yellow-300  px-6 py-2 rounded-md shadow-lg hover:scale-105 transition-transform duration-300 transform focus:outline-none hover:-translate-y-1  ${
-        hovered ? "ring-2 ring-offset-1 ring-blue-500" : ""
+      className={`relative bg-gradient-to-r from-blue-500 to-blue-300 text-white px-4 py-2 rounded-md shadow-lg hover:scale-105 transition-transform duration-300 transform focus:outline-none hover:-translate-y-1 text-sm  ${
+        hovered ? "ring-2 ring-offset-1" : ""
       }`}
     >
       <span
@@ -23,5 +23,5 @@ function PrimaryButton({ children, onClick }) {
   );
 }
 
-export default PrimaryButton;
+export default TableButton;
 

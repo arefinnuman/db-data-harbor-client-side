@@ -1,12 +1,13 @@
 import logo from "@/assets/logo.gif";
 import Image from "next/image";
 import Link from "next/link";
+import SecondaryOutlineButton from "../Buttons/SecondaryOutlineButton";
 
 const NavbarComponent = () => {
   const navbarItems = (
     <>
       <li>
-        <Link href="/explore">Explore</Link>
+        <Link href="/terminals">Terminals</Link>
       </li>
       <li>
         <Link href="/add-books">About Us</Link>
@@ -47,7 +48,7 @@ const NavbarComponent = () => {
           <ul className="menu menu-horizontal px-1">{navbarItems}</ul>
         </div>
         <div className="navbar-end">
-          <a className="btn btn-sm btn-outline btn-primary">Login</a>
+          <SecondaryOutlineButton>Login</SecondaryOutlineButton>
         </div>
       </div>
     </section>
