@@ -1,4 +1,5 @@
 import { useGetAllTerminalsQuery } from "@/redux/terminals/terminalApi";
+import Link from "next/link";
 import TableButton from "../Buttons/TableButton";
 import LoadingScreen from "../Ui/LoadingScreen";
 
@@ -9,8 +10,6 @@ export default function TerminalsComponent() {
   });
 
   const terminalsData = data?.data;
-
-  // i want to show only date, here date comes from mongoose
 
   return (
     <>
@@ -81,11 +80,13 @@ export default function TerminalsComponent() {
                     </td>
                     <td className="py-3 px-5 border border-gray-300">
                       {terminal.liveDate
-                        ? new Date(terminal.deploymentDate).toLocaleDateString()
+                        ? new Date(terminal.liveDate).toLocaleDateString()
                         : "-"}
                     </td>
                     <td className="py-3 px-5 border-b border-gray-300">
-                      <TableButton>Details</TableButton>
+                      <Link href={`/terminals/${terminal.id}`}>
+                        <TableButton>Details</TableButton>
+                      </Link>
                     </td>
                   </tr>
                 ))}

@@ -5,8 +5,13 @@ const terminalApi = apiSlice.injectEndpoints({
     getAllTerminals: builder.query({
       query: () => "/terminals",
     }),
+
+    getSingleTerminal: builder.query({
+      query: (id) => `/terminals/${id}`,
+    }),
   }),
 });
 
-export const { useGetAllTerminalsQuery } = terminalApi;
+export const { useGetAllTerminalsQuery, useGetSingleTerminalQuery } =
+  terminalApi;
 

@@ -42,7 +42,10 @@ const NavbarComponent = () => {
               {navbarItems}
             </ul>
           </div>
-          <Image src={logo} alt="logo" width={250} height={250} />
+          <Link href="/">
+            {" "}
+            <Image src={logo} alt="logo" width={250} height={250} />
+          </Link>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">{navbarItems}</ul>
