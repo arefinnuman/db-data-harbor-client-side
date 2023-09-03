@@ -1,4 +1,4 @@
-import logo from "@/assets/logo.gif";
+import logo from "@/assets/DB-Data-Harbor.png";
 import Image from "next/image";
 import Link from "next/link";
 import SecondaryOutlineButton from "../Buttons/SecondaryOutlineButton";
@@ -6,6 +6,9 @@ import SecondaryOutlineButton from "../Buttons/SecondaryOutlineButton";
 const NavbarComponent = () => {
   const navbarItems = (
     <>
+      <li>
+        <Link href="/ebl-365">Ebl 365</Link>
+      </li>
       <li>
         <Link href="/terminals">Terminals</Link>
       </li>
@@ -44,7 +47,7 @@ const NavbarComponent = () => {
           </div>
           <Link href="/">
             {" "}
-            <Image src={logo} alt="logo" width={250} height={250} />
+            <Image src={logo} alt="logo" width={200} height={100} />
           </Link>
         </div>
         <div className="navbar-center hidden lg:flex">
