@@ -5,9 +5,13 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:5555/api/v1",
   }),
-  tagTypes: ["terminals"],
+  tagTypes: [
+    "terminals",
+    "issueforms",
+    "boothacquisitions",
+    "ebl365",
+    "users",
+    "boothmanagements",
+  ],
   endpoints: () => ({}),
 });
-
-
-
