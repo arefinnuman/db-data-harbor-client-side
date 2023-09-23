@@ -1,9 +1,32 @@
 import logo from "@/assets/DB-Data-Harbor.png";
+import jwtDecode from "jwt-decode";
 import Image from "next/image";
 import Link from "next/link";
-import SecondaryOutlineButton from "../Buttons/SecondaryOutlineButton";
+import { useEffect, useState } from "react";
 
 const NavbarComponent = () => {
+  const [user, setUser] = useState(null);
+
+  const getUserFromToken = () => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const decodedToken = jwtDecode(token);
+          return decodedToken;
+        } catch (error) {
+          console.error("Error decoding token:", error);
+        }
+      }
+    }
+    return null;
+  };
+
+  useEffect(() => {
+    const user = getUserFromToken();
+    setUser(user);
+  }, []);
+
   const navbarItems = (
     <>
       <li>
@@ -13,7 +36,7 @@ const NavbarComponent = () => {
         <Link href="/terminals">Terminals</Link>
       </li>
       <li>
-        <Link href="/add-books">About Us</Link>
+        <Link href="/about">About Us</Link>
       </li>
     </>
   );
@@ -46,15 +69,26 @@ const NavbarComponent = () => {
             </ul>
           </div>
           <Link href="/">
-            {" "}
-            <Image src={logo} alt="logo" width={200} height={100} />
+            <Image src={logo} alt="logo" width={150} height={100} />
           </Link>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">{navbarItems}</ul>
         </div>
         <div className="navbar-end">
-          <SecondaryOutlineButton>Login</SecondaryOutlineButton>
+          {user ? (
+            <>
+              <button className="btn btn-ghost btn-sm rounded-btn">
+                Logout
+              </button>
+            </>
+          ) : (
+            <Link href="/login">
+              <button className="btn btn-ghost btn-sm rounded-btn">
+                Login
+              </button>
+            </Link>
+          )}
         </div>
       </div>
     </section>
@@ -62,4 +96,3 @@ const NavbarComponent = () => {
 };
 
 export default NavbarComponent;
-
