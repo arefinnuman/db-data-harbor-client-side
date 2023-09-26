@@ -13,7 +13,6 @@ const BoothManagementComponent = () => {
   );
 
   const boothManagementData = boothData?.data;
-  console.log(boothManagementData);
 
   return (
     <>

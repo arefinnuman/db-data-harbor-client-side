@@ -20,8 +20,6 @@ const SingleBoothManagementComponent = () => {
     numberOfLight,
     numberOfMineralBoard,
     numberOfUps,
-    ebl365,
-    createdBy,
   } = boothManagementData;
 
   return (

@@ -35,6 +35,9 @@ const NavbarComponent = () => {
         <Link href="/terminals">Terminals</Link>
       </li>
       <li>
+        <Link href="/booth-acquisition">Booth Acquisition</Link>
+      </li>
+      <li>
         <Link href="/booth-management">Booth Management</Link>
       </li>
     </>

@@ -38,4 +38,10 @@ const boothAcquisitionApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const {} = boothAcquisitionApi;
+export const {
+  useCreateBoothAcquisitionMutation,
+  useGetAllBoothAcquisitionQuery,
+  useGetSingleBoothAcquisitionQuery,
+  useUpdateBoothAcquisitionMutation,
+  useDeleteBoothAcquisitionMutation,
+} = boothAcquisitionApi;
