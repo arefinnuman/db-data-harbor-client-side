@@ -19,6 +19,10 @@ const boothManagementApi = apiSlice.injectEndpoints({
       query: (id) => `/booth-management/${id}`,
     }),
 
+    getBoothManagementByEbl365Id: builder.query({
+      query: (ebl365Id) => `/booth-management/ebl-365/${ebl365Id}`,
+    }),
+
     updateBoothManagement: builder.mutation({
       query: ({ boothManagementData }) => ({
         url: `/booth-management/${boothManagementData.id}`,
@@ -42,6 +46,7 @@ export const {
   useCreateBoothManagementMutation,
   useGetAllBoothManagementQuery,
   useGetSingleBoothManagementQuery,
+  useGetBoothManagementByEbl365IdQuery,
   useUpdateBoothManagementMutation,
   useDeleteBoothManagementMutation,
 } = boothManagementApi;

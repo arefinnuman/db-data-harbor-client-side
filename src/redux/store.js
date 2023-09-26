@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "./apiSlice";
 import authReducer, { setToken } from "./auth/authSlice";
+import userReducer from "./user/userSlice";
 
 const isClient = typeof window !== "undefined";
 const initialToken = isClient ? localStorage.getItem("token") : null;
@@ -8,6 +9,7 @@ const initialToken = isClient ? localStorage.getItem("token") : null;
 const store = configureStore({
   reducer: {
     auth: authReducer,
+    user: userReducer,
 
     [apiSlice.reducerPath]: apiSlice.reducer,
   },

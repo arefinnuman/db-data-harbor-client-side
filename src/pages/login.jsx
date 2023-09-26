@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import LoadingScreen from "@/components/Ui/LoadingScreen";
 import { useLoginMutation } from "@/redux/auth/authApi";
 import { setToken } from "@/redux/auth/authSlice";
@@ -6,14 +7,11 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const LoginPage = () => {
   const router = useRouter();
-  const dispatch = useDispatch();
-
   const [loginResponse, { isLoading }] = useLoginMutation();
-
   const { register, handleSubmit, setValue } = useForm({
     defaultValues: {
       employeeId: "",
@@ -28,7 +26,6 @@ const LoginPage = () => {
     };
     try {
       const response = await loginResponse(userData);
-      console.log("response", response);
       if (response?.data?.success === true) {
         const accessToken = response?.data?.data?.accessToken;
         localStorage.setItem("token", accessToken);
@@ -44,6 +41,9 @@ const LoginPage = () => {
       toast.error("Something went wrong");
     }
   };
+
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
 
   if (isLoading) {
     return <LoadingScreen />;

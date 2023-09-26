@@ -8,7 +8,7 @@ const issueFormApi = apiSlice.injectEndpoints({
         method: "POST",
         body: issueFormData,
       }),
-      invalidatesTags: ["issueForm"],
+      invalidatesTags: ["issueforms"],
     }),
 
     getAllIssueForm: builder.query({
@@ -25,7 +25,7 @@ const issueFormApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: issueFormData,
       }),
-      invalidatesTags: ["issueForm"],
+      invalidatesTags: ["issueforms"],
     }),
 
     deleteIssueForm: builder.mutation({
@@ -33,7 +33,7 @@ const issueFormApi = apiSlice.injectEndpoints({
         url: `/issue-form/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["issueForm"],
+      invalidatesTags: ["issueforms"],
     }),
 
     updateIssueToResolve: builder.mutation({
@@ -41,7 +41,7 @@ const issueFormApi = apiSlice.injectEndpoints({
         url: `/issue-form/resolved/${id}`,
         method: "PATCH",
       }),
-      invalidatesTags: ["issueForm"],
+      invalidatesTags: ["issueforms"],
     }),
 
     updateIssueToPending: builder.mutation({
@@ -49,7 +49,7 @@ const issueFormApi = apiSlice.injectEndpoints({
         url: `/issue-form/pending/${id}`,
         method: "PATCH",
       }),
-      invalidatesTags: ["issueForm"],
+      invalidatesTags: ["issueforms"],
     }),
 
     getPendingIssues: builder.query({
@@ -61,11 +61,15 @@ const issueFormApi = apiSlice.injectEndpoints({
     }),
 
     getPendingIssuesByEbl3656: builder.query({
-      query: (id) => `/issue-form/pending/${id}`,
+      query: (ebl365Id) => `/issue-form/pending/${ebl365Id}`,
     }),
 
     getResolvedIssuesByEbl365: builder.query({
-      query: () => `/issue-form/resolved/${id}`,
+      query: (ebl365Id) => `/issue-form/resolved/${ebl365Id}`,
+    }),
+
+    getIssuesByEbl365: builder.query({
+      query: (ebl365Id) => `/issue-form/ebl-365/${ebl365Id}`,
     }),
   }),
 });
@@ -76,4 +80,11 @@ export const {
   useGetSingleIssueFormQuery,
   useUpdateIssueFormMutation,
   useDeleteIssueFormMutation,
+  useUpdateIssueToResolveMutation,
+  useUpdateIssueToPendingMutation,
+  useGetPendingIssuesQuery,
+  useGetResolvedIssuesQuery,
+  useGetPendingIssuesByEbl365Query,
+  useGetResolvedIssuesByEbl365Query,
+  useGetIssuesByEbl365Query,
 } = issueFormApi;

@@ -1,6 +1,5 @@
 import { useGetAllTerminalsQuery } from "@/redux/terminals/terminalApi";
 import Link from "next/link";
-import TableButton from "../Buttons/TableButton";
 import LoadingScreen from "../Ui/LoadingScreen";
 
 export default function TerminalsComponent() {
@@ -8,7 +7,6 @@ export default function TerminalsComponent() {
     pollingInterval: 30000,
     refetchOnMountOrArgChange: true,
   });
-
   const terminalsData = data?.data;
 
   return (
@@ -16,38 +14,31 @@ export default function TerminalsComponent() {
       {isLoading ? (
         <LoadingScreen />
       ) : (
-        <section className=" p-8">
-          <h1 className="text-3xl text-center text-primary mb-2">
-            All Terminals
+        <section className="p-6">
+          <h1 className="text-2xl text-center font-semibold mb-4">
+            AVAILABLE TERMINALS
           </h1>
-          <div className="w-max-6xl m-auto mt-6 overflow-x-auto shadow-lg rounded-t-md">
-            <table className="min-w-full bg-white border rounded">
-              <thead className="bg-sky-500 text-white">
+          <div className="w-max-6xl m-auto mt-4 overflow-x-auto shadow-md rounded-md">
+            <table className="min-w-full bg-white">
+              <thead className="bg-blue-500 text-white">
                 <tr>
-                  <th className="py-3 px-5 border-b border-gray-400 font-bold text-left">
-                    Name and ID
-                  </th>
-                  <th className="py-3 px-5 border-b border-gray-400 font-bold text-left">
-                    Id
-                  </th>
-                  <th className="py-3 px-5 border-b border-gray-400 font-bold text-left">
-                    Type
-                  </th>
-                  <th className="py-3 px-5 border-b border-gray-400 font-bold text-left">
-                    Status
-                  </th>
-                  <th className="py-3 px-5 border-b border-gray-400 font-bold text-left">
-                    Brand Name
-                  </th>
-                  <th className="py-3 px-5 border-b border-gray-400 font-bold text-left">
-                    Deployment Date
-                  </th>
-                  <th className="py-3 px-5 border-b border-gray-400 font-bold text-left">
-                    Live Date
-                  </th>
-                  <th className="py-3 px-5 border-b border-gray-400 font-bold text-left">
-                    Details
-                  </th>
+                  {[
+                    "Name and ID",
+                    "Id",
+                    "Type",
+                    "Status",
+                    "Brand Name",
+                    "Deployment Date",
+                    "Live Date",
+                    "Details",
+                  ].map((header) => (
+                    <th
+                      key={header}
+                      className="py-2 px-4 text-left font-semibold border-b border-blue-300"
+                    >
+                      {header}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
@@ -55,37 +46,43 @@ export default function TerminalsComponent() {
                   <tr
                     key={terminal.terminalId}
                     className={`${
-                      index % 2 === 0 ? "bg-gray-100" : ""
-                    } hover:bg-gray-200 transition duration-200`}
+                      index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                    } hover:bg-gray-100 transition duration-150`}
                   >
-                    <td className="py-3 px-5 border border-gray-300">
+                    <td className="py-2 px-4 border-t border-gray-200">
                       {terminal.terminalNameAndId}
                     </td>
-                    <td className="py-3 px-5 border border-gray-300">
+                    <td className="py-2 px-4 border-t border-gray-200">
                       {terminal.terminalId}
                     </td>
-                    <td className="py-3 px-5 border border-gray-300">
+                    <td className="py-2 px-4 border-t border-gray-200">
                       {terminal.terminalType}
                     </td>
-                    <td className="py-3 px-5 border border-gray-300">
+                    <td className="py-2 px-4 border-t border-gray-200">
                       {terminal.terminalStatus}
                     </td>
-                    <td className="py-3 px-5 border border-gray-300">
+                    <td className="py-2 px-4 border-t border-gray-200">
                       {terminal.terminalBrand}
                     </td>
-                    <td className="py-3 px-5 border border-gray-300">
+                    <td className="py-2 px-4 border-t border-gray-200">
                       {terminal.deploymentDate
                         ? new Date(terminal.deploymentDate).toLocaleDateString()
                         : "-"}
                     </td>
-                    <td className="py-3 px-5 border border-gray-300">
+                    <td className="py-2 px-4 border-t border-gray-200">
                       {terminal.liveDate
                         ? new Date(terminal.liveDate).toLocaleDateString()
                         : "-"}
                     </td>
-                    <td className="py-3 px-5 border-b border-gray-300">
-                      <Link href={`/terminals/${terminal.id}`}>
-                        <TableButton>Details</TableButton>
+                    <td className="py-2 px-4 border-t border-gray-200">
+                      <Link
+                        href={`/terminals/${terminal.id}`}
+                        className="flex items-center text-gray-500 hover:text-blue-500 transition-all duration-300 transform hover:scale-105"
+                      >
+                        <span className="mr-2 border-b border-transparent hover:border-black hover:shadow-md">
+                          {" "}
+                          Details
+                        </span>
                       </Link>
                     </td>
                   </tr>

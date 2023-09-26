@@ -17,22 +17,24 @@ export default function Ebl365Components() {
         <LoadingScreen />
       ) : (
         <section className="p-6">
-          <h1 className="text-3xl text-center font-semibold mb-4">
-            All Booths Information
+          <h1 className="text-2xl text-center font-semibold mb-4">
+            AVAILABLE BOOTHS
           </h1>
+
           <div className="w-full max-w-6xl m-auto overflow-x-auto shadow-md rounded-xl">
             <table className="w-full bg-white border">
               <thead className="bg-blue-500 text-white">
                 <tr>
                   {[
                     "Name",
-                    "Id",
+                    "Address",
                     "Type",
-                    "Zone Type",
-                    "Device Availability",
+                    "Zone",
+                    "Devices",
                     "Total",
                     "Active",
                     "Details",
+                    "Action",
                   ].map((header) => (
                     <th
                       key={header}
@@ -49,7 +51,7 @@ export default function Ebl365Components() {
                     key={ebl365.id}
                     className={`${
                       index % 2 === 0 ? "bg-white" : "bg-white"
-                    } hover:bg-blue-100 transition duration-150`}
+                    } hover:bg-blue-50 transition duration-150`}
                   >
                     <td className="py-2 px-4 border border-gray-200">
                       {ebl365.ebl365Name}
@@ -79,6 +81,16 @@ export default function Ebl365Components() {
                       >
                         <span className="mr-2 border-b border-transparent hover:border-black hover:shadow-md">
                           Details
+                        </span>
+                      </Link>
+                    </td>
+                    <td className="py-2 px-4 border border-gray-200">
+                      <Link
+                        href={`/issue/drop-an-issue/${ebl365.id}`}
+                        className="flex items-center text-gray-500 hover:text-blue-500 transition-all duration-300 transform hover:scale-105"
+                      >
+                        <span className="mr-2 border-b border-transparent hover:border-black hover:shadow-md">
+                          Drop an issue
                         </span>
                       </Link>
                     </td>

@@ -1,5 +1,7 @@
 import { useGetSingleEbl365Query } from "@/redux/ebl365/ebl365Api";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import IssueFormInSingleEbl365Component from "../Issue/IssueFormInSingleEbl365";
 import LoadingScreen from "../Ui/LoadingScreen";
 
 const SingleEbl365Components = () => {
@@ -44,146 +46,147 @@ const SingleEbl365Components = () => {
       {isLoading ? (
         <LoadingScreen />
       ) : (
-        <section className="p-6 bg-gray-50">
-          <div className="p-4 bg-white shadow-md rounded-lg mt-6">
-            <h1 className="text-2xl font-semibold mb-4 text-primary border-b pb-2">
+        <section className="py-4">
+          <div className="p-3 bg-white shadow-md rounded-lg mb-4">
+            <h1 className="text-xl font-semibold mb-3 text-primary border-b pb-1">
               Booth Details
             </h1>
-            <table className="min-w-full bg-white border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-              <tbody className="text-gray-700">
+            <table className="min-w-full text-gray-700">
+              <tbody>
                 <tr className="hover:bg-gray-100">
-                  <td className="p-3 border">Name</td>
-                  <td className="p-3 border">{ebl365Name}</td>
+                  <td className="p-2">Name</td>
+                  <td className="p-2">{ebl365Name}</td>
                 </tr>
                 <tr className="hover:bg-gray-100">
-                  <td className="p-3 border">Address</td>
-                  <td className="p-3 border">{ebl365Address}</td>
+                  <td className="p-2">Address</td>
+                  <td className="p-2">{ebl365Address}</td>
                 </tr>
                 <tr className="hover:bg-gray-100">
-                  <td className="p-3 border">Zone</td>
-                  <td className="p-3 border">{ebl365Zone}</td>
+                  <td className="p-2">Zone</td>
+                  <td className="p-2">{ebl365Zone}</td>
                 </tr>
                 <tr className="hover:bg-gray-100">
-                  <td className="p-3 border">Name In Bengali</td>
-                  <td className="p-3 border">{ebl365NameInBengali}</td>
+                  <td className="p-2">Name In Bengali</td>
+                  <td className="p-2">{ebl365NameInBengali}</td>
                 </tr>
                 <tr className="hover:bg-gray-100">
-                  <td className="p-3 border">Status Type</td>
-                  <td className="p-3 border">{ebl365StatusType}</td>
+                  <td className="p-2">Status Type</td>
+                  <td className="p-2">{ebl365StatusType}</td>
                 </tr>
                 <tr className="hover:bg-gray-100">
-                  <td className="p-3 border">Location Type</td>
-                  <td className="p-3 border">{locationType}</td>
+                  <td className="p-2">Location Type</td>
+                  <td className="p-2">{locationType}</td>
                 </tr>
                 <tr className="hover:bg-gray-100">
-                  <td className="p-3 border">Area Type</td>
-                  <td className="p-3 border">{areaType}</td>
+                  <td className="p-2">Area Type</td>
+                  <td className="p-2">{areaType}</td>
                 </tr>
                 <tr className="hover:bg-gray-100">
-                  <td className="p-3 border">Area Name</td>
-                  <td className="p-3 border">{areaName}</td>
+                  <td className="p-2">Area Name</td>
+                  <td className="p-2">{areaName}</td>
                 </tr>
                 <tr className="hover:bg-gray-100">
-                  <td className="p-3 border">Geo Latitude</td>
-                  <td className="p-3 border">{geoLatitude}</td>
+                  <td className="p-2">Geo Latitude</td>
+                  <td className="p-2">{geoLatitude}</td>
                 </tr>
                 <tr className="hover:bg-gray-100">
-                  <td className="p-3 border">Geo Longitude</td>
-                  <td className="p-3 border">{geoLongitude}</td>
+                  <td className="p-2">Geo Longitude</td>
+                  <td className="p-2">{geoLongitude}</td>
                 </tr>
                 <tr className="hover:bg-gray-100">
-                  <td className="p-3 border">Branch Controlling Gl</td>
-                  <td className="p-3 border">{branchControllingGl}</td>
+                  <td className="p-2">Branch Controlling Gl</td>
+                  <td className="p-2">{branchControllingGl}</td>
                 </tr>
                 <tr className="hover:bg-gray-100">
-                  <td className="p-3 border">Division</td>
-                  <td className="p-3 border">{division}</td>
+                  <td className="p-2">Division</td>
+                  <td className="p-2">{division}</td>
                 </tr>
                 <tr className="hover:bg-gray-100">
-                  <td className="p-3 border">Postal Code</td>
-                  <td className="p-3 border">{postalCOde}</td>
+                  <td className="p-2">Postal Code</td>
+                  <td className="p-2">{postalCOde}</td>
                 </tr>
                 <tr className="hover:bg-gray-100">
-                  <td className="p-3 border">Nearest Famous Place</td>
-                  <td className="p-3 border">{nearestFamousPlace}</td>
+                  <td className="p-2">Nearest Famous Place</td>
+                  <td className="p-2">{nearestFamousPlace}</td>
                 </tr>
                 <tr className="hover:bg-gray-100">
-                  <td className="p-3 border">No Of Available Machine</td>
-                  <td className="p-3 border">{noOfAvailableMachine}</td>
+                  <td className="p-2">No Of Available Machine</td>
+                  <td className="p-2">{noOfAvailableMachine}</td>
                 </tr>
                 <tr className="hover:bg-gray-100">
-                  <td className="p-3 border">No Of Running Machine</td>
-                  <td className="p-3 border">{noOfRunningMachine}</td>
+                  <td className="p-2">No Of Running Machine</td>
+                  <td className="p-2">{noOfRunningMachine}</td>
                 </tr>
                 <tr className="hover:bg-gray-100">
-                  <td className="p-3 border">Division Id</td>
-                  <td className="p-3 border">{divisionId}</td>
+                  <td className="p-2">Division Id</td>
+                  <td className="p-2">{divisionId}</td>
                 </tr>
                 <tr className="hover:bg-gray-100">
-                  <td className="p-3 border">District Id</td>
-                  <td className="p-3 border">{districtId}</td>
+                  <td className="p-2">District Id</td>
+                  <td className="p-2">{districtId}</td>
                 </tr>
                 <tr className="hover:bg-gray-100">
-                  <td className="p-3 border">Upazila Or Thana</td>
-                  <td className="p-3 border">{upazilaOrThana}</td>
+                  <td className="p-2">Upazila Or Thana</td>
+                  <td className="p-2">{upazilaOrThana}</td>
                 </tr>
                 <tr className="hover:bg-gray-100">
-                  <td className="p-3 border">Controlled By</td>
-                  <td className="p-3 border">{controlledBy}</td>
+                  <td className="p-2">Controlled By</td>
+                  <td className="p-2">{controlledBy}</td>
                 </tr>
                 <tr className="hover:bg-gray-100">
-                  <td className="p-3 border">Booth Devices</td>
-                  <td className="p-3 border">{boothDevices}</td>
+                  <td className="p-2">Booth Devices</td>
+                  <td className="p-2">{boothDevices}</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div className="container mx-auto">
-            <div className="p-4 bg-white shadow-md rounded-lg mb-6">
-              <h1 className="text-2xl font-semibold mb-4 text-black border-b pb-2">
-                Available Machine Details
-              </h1>
 
+          <div className="container mx-auto p-3">
+            <h1 className="text-xl font-semibold mb-3 text-black border-b pb-1">
+              Available Machines
+            </h1>
+
+            <div className="grid grid-cols-3 gap-4">
               {machines.map((machine, index) => (
-                <div key={index} className="my-6">
-                  <h2 className="text-xl mb-2 text-primary">
+                <div
+                  key={index}
+                  className="bg-white p-3 shadow-sm rounded hover:shadow-md transition-shadow"
+                >
+                  <h2 className="text-lg text-primary mb-2">
                     Machine {index + 1}
                   </h2>
-                  <table className="min-w-full bg-white border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                    <tbody className="text-gray-900">
-                      <tr className="hover:bg-gray-100">
-                        <td className="p-3 border">Terminal Id</td>
-                        <td className="p-3 border">{machine.terminalId}</td>
-                      </tr>
-                      <tr className="hover:bg-gray-100">
-                        <td className="p-3 border">Terminal Name</td>
-                        <td className="p-3 border">
-                          {machine.terminalNameAndId}
-                        </td>
-                      </tr>
-                      <tr className="hover:bg-gray-100">
-                        <td className="p-3 border">Terminal Type</td>
-                        <td className="p-3 border">{machine.terminalType}</td>
-                      </tr>
-                      <tr className="hover:bg-gray-100">
-                        <td className="p-3 border">Terminal Status</td>
-                        <td className="p-3 border">{machine.terminalStatus}</td>
-                      </tr>
-                      <tr className="hover:bg-gray-100">
-                        <td className="p-3 border">Terminal Brand</td>
-                        <td className="p-3 border">{machine.terminalBrand}</td>
-                      </tr>
-                      <tr className="hover:bg-gray-100">
-                        <td className="p-3 border">Terminal Model</td>
-                        <td className="p-3 border">{machine.terminalModel}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <p className="text-center my-5">View Details</p>
+                  <div>
+                    <strong>Terminal Id:</strong> {machine.terminalId}
+                  </div>
+                  <div>
+                    <strong>Name:</strong> {machine.terminalNameAndId}
+                  </div>
+                  <div>
+                    <strong>Type:</strong> {machine.terminalType}
+                  </div>
+                  <div>
+                    <strong>Status:</strong> {machine.terminalStatus}
+                  </div>
+                  <div>
+                    <strong>Brand:</strong> {machine.terminalBrand}
+                  </div>
+                  <div>
+                    <strong>Model:</strong> {machine.terminalModel}
+                  </div>
+                  <div className="text-center mt-3">
+                    <Link
+                      href={`/terminals/${machine._id}`}
+                      className="text-blue-500"
+                    >
+                      View Details
+                    </Link>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
+
+          <IssueFormInSingleEbl365Component ebl365Id={id} />
         </section>
       )}
     </>
