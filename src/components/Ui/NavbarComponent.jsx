@@ -40,6 +40,9 @@ const NavbarComponent = () => {
       <li>
         <Link href="/booth-management">Booth Management</Link>
       </li>
+      <li>
+        <Link href="/issue-form">Issue Form</Link>
+      </li>
     </>
   );
   return (
