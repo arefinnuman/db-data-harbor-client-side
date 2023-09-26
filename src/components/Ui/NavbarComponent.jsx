@@ -13,7 +13,6 @@ const NavbarComponent = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
 
-
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -36,7 +35,7 @@ const NavbarComponent = () => {
         <Link href="/terminals">Terminals</Link>
       </li>
       <li>
-        <Link href="/about">About Us</Link>
+        <Link href="/booth-management">Booth Management</Link>
       </li>
     </>
   );

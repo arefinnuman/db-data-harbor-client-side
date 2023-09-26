@@ -1,7 +1,6 @@
 import { useGetSingleTerminalQuery } from "@/redux/terminals/terminalApi";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import SecondaryButton from "../Buttons/SecondaryButton";
 import LoadingScreen from "../Ui/LoadingScreen";
 
 const SingleTerminalComponent = () => {
@@ -33,93 +32,100 @@ const SingleTerminalComponent = () => {
     terminalNameAndId,
     terminalStatus,
     terminalType,
-    terminal365,
+    ebl365,
   } = terminalData;
 
+  console.log(terminalData);
+
   const TableRow = ({ label, data }) => (
-    <tr className="hover:bg-blue-100">
-      <td className="py-3 px-4 font-semibold text-gray-700 w-1/3 border border-r-gray-400">
+    <tr>
+      <td className="py-2 px-4 font-medium text-gray-600 w-1/3 border-b">
         {label}
       </td>
-      <td className="py-3 px-4 text-gray-900 border">{data}</td>
+      <td className="py-2 px-4 text-gray-800 border-b">{data}</td>
     </tr>
   );
-
   return (
     <>
       {isLoading ? (
         <LoadingScreen />
       ) : (
-        <section className="min-h-screen flex justify-center items-center py-12 px-4">
-          <div className="bg-white shadow-2xl pb-8 rounded-lg w-full max-w-4xl">
-            <div className="text-center space-y-6 pb-4 border-b border-gray-200">
-              <h1 className="text-2xl font-bold text-primary ">
-                Terminal Details
+        <section className="min-screen flex justify-center items-center py-12 px-4">
+          <div className="bg-white p-10 rounded-lg w-full max-w-4xl shadow-xl transform hover:scale-105 transition-transform duration-300">
+            <div className="text-center space-y-4 pb-3 border-b border-gray-300">
+              <h1 className="text-xl font-bold text-primary">
+                TERMINAL DETAILS
               </h1>
-              <p className="text-lg text-gray-700">
-                Information for terminal ID: {terminalId}
+              <p className="text-md text-gray-600">
+                Information for terminal ID:{"  "}
+                <span className="font-semibold">{terminalId}</span>
               </p>
             </div>
 
-            <table className="min-w-full mt-8 divide-y divide-gray-200">
-              <tbody className="divide-y divide-gray-300">
+            <table className="min-w-full mt-8 space-y-4">
+              <tbody>
                 <TableRow
-                  label="Terminal Name And ID"
+                  label="Terminal Name and ID"
                   data={terminalNameAndId}
                 />
-                <TableRow label="Terminal Id" data={terminalId} />
+                <TableRow label="Terminal ID" data={terminalId} />
                 <TableRow label="Terminal Type" data={terminalType} />
                 <TableRow label="Terminal Status" data={terminalStatus} />
                 <TableRow label="Terminal Brand" data={terminalBrand} />
                 <TableRow label="Terminal Model" data={terminalModel} />
-                <TableRow label="Deployment Date" data={deploymentDate} />
-                <TableRow label="Live Date" data={liveDate} />
                 <TableRow label="Asset Tag Serial" data={assetTagSerial} />
                 <TableRow label="GL Code" data={glCode} />
                 <TableRow label="GL Number" data={glNumber} />
                 <TableRow label="Insurance Limit" data={insuranceLimit} />
-                <TableRow label="Number Of BPM" data={numberOfBpm} />
+                <TableRow label="Deployment Date" data={deploymentDate} />
+                <TableRow label="Live Date" data={liveDate} />
+                <TableRow label="Number of BPM" data={numberOfBpm} />
                 <TableRow
-                  label="Monthly Avg No Of Txn"
+                  label="Monthly Average Number of Transactions"
                   data={monthlyAvgNoOfTxn}
                 />
                 <TableRow
-                  label="Monthly Avg Vol Of Txn"
+                  label="Monthly Average Volume of Transactions"
                   data={monthlyAvgVolOfTxn}
                 />
                 <TableRow
-                  label="Monthly No Of Transaction"
+                  label="Monthly Number of Transactions"
                   data={monthlyNoOfTransaction}
                 />
                 <TableRow
-                  label="Monthly Vol Of Transaction"
+                  label="Monthly Volume of Transactions"
                   data={monthlyVolOfTransaction}
                 />
               </tbody>
             </table>
 
-            <h2 className="mt-8 mb-4 text-2xl font-semibold text-gray-800 text-center">
-              365 Booth Information
+            <h2 className="mt-6 mb-4 text-primary text-xl font-semibold text-center ">
+              365 BOOTH DETAILS
             </h2>
 
-            <table className="min-w-full mt-6 divide-y divide-gray-200">
-              <tbody className="divide-y divide-gray-300">
+            <table className="min-w-full mt-4 space-y-4">
+              <tbody>
+                <TableRow label="Booth Name" data={ebl365.ebl365Name} />
                 <TableRow
-                  label="365 Booth Name"
-                  data={terminal365?.ebl365Name}
+                  label="Running Machines"
+                  data={ebl365.noOfRunningMachine}
                 />
                 <TableRow
-                  label="365 Booth Address"
-                  data={terminal365?.ebl365Address}
+                  label="Available Machines"
+                  data={ebl365.boothDevices}
                 />
-                <TableRow label="365 Area Name" data={terminal365?.areaName} />
-                <TableRow label="365 Area Type" data={terminal365?.areaType} />
+                <TableRow label="Booth Status" data={ebl365.ebl365StatusType} />
+                <TableRow label="Booth Zone" data={ebl365.ebl365Zone} />
+                <TableRow label="Booth Address" data={ebl365.ebl365Address} />
               </tbody>
             </table>
 
-            <div className="mt-6 text-center">
-              <Link href="/">
-                <SecondaryButton>Click Here</SecondaryButton>
+            <div className="mt-10 text-center">
+              <Link
+                href="/"
+                className="inline-block bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-full transition duration-200"
+              >
+                Go Back
               </Link>
             </div>
           </div>
@@ -131,3 +137,37 @@ const SingleTerminalComponent = () => {
 
 export default SingleTerminalComponent;
 
+{
+  /* <TableRow
+label="Terminal Name and ID"
+data={terminalNameAndId}
+/>
+<TableRow label="Terminal ID" data={terminalId} />
+<TableRow label="Terminal Type" data={terminalType} />
+<TableRow label="Terminal Status" data={terminalStatus} />
+<TableRow label="Terminal Brand" data={terminalBrand} />
+<TableRow label="Terminal Model" data={terminalModel} />
+<TableRow label="Asset Tag Serial" data={assetTagSerial} />
+<TableRow label="GL Code" data={glCode} />
+<TableRow label="GL Number" data={glNumber} />
+<TableRow label="Insurance Limit" data={insuranceLimit} />
+<TableRow label="Deployment Date" data={deploymentDate} />
+<TableRow label="Live Date" data={liveDate} />
+<TableRow
+label="Monthly Average Number of Transactions"
+data={monthlyAvgNoOfTxn}
+/>
+<TableRow
+label="Monthly Average Volume of Transactions"
+data={monthlyAvgVolOfTxn}
+/>
+<TableRow
+label="Monthly Number of Transactions"
+data={monthlyNoOfTransaction}
+/>
+<TableRow
+label="Monthly Volume of Transactions"
+data={monthlyVolOfTransaction}
+/>
+<TableRow label="Number of BPM" data={numberOfBpm} /> */
+}

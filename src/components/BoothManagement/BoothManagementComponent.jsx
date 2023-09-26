@@ -1,15 +1,19 @@
-import { useGetAllEbl365Query } from "@/redux/ebl365/ebl365Api";
+import { useGetAllBoothManagementQuery } from "@/redux/boothManagement/bothManagementApi";
 import Link from "next/link";
 import LoadingScreen from "../Ui/LoadingScreen";
 
-export default function Ebl365Components() {
-  const { data, isLoading } = useGetAllEbl365Query(undefined, {
-    pollingInterval: 30000,
-    refetchOnMountOrArgChange: true,
-    refetchOnReconnect: true,
-  });
+const BoothManagementComponent = () => {
+  const { data: boothData, isLoading } = useGetAllBoothManagementQuery(
+    undefined,
+    {
+      pollingInterval: 30000,
+      refetchOnMountOrArgChange: true,
+      refetchOnReconnect: true,
+    }
+  );
 
-  const ebl365Data = data?.data;
+  const boothManagementData = boothData?.data;
+  console.log(boothManagementData);
 
   return (
     <>
@@ -28,13 +32,12 @@ export default function Ebl365Components() {
                   {[
                     "Name",
                     "Address",
-                    "Type",
-                    "Zone",
-                    "Devices",
-                    "Total",
-                    "Active",
+                    "AC Quantity",
+                    "Light Quantity",
+                    "Machine Quantity",
+                    "Mineral Quantity",
+                    "UPS Quantity",
                     "Details",
-                    "Action",
                   ].map((header) => (
                     <th
                       key={header}
@@ -46,37 +49,38 @@ export default function Ebl365Components() {
                 </tr>
               </thead>
               <tbody>
-                {ebl365Data?.map((ebl365, index) => (
+                {boothManagementData?.map((boothManagement, index) => (
                   <tr
-                    key={ebl365.id}
+                    key={boothManagement.id}
                     className={`${
                       index % 2 === 0 ? "bg-white" : "bg-white"
                     } hover:bg-blue-50 transition duration-150`}
                   >
-                    <td className="py-2 px-4">{ebl365.ebl365Name}</td>
-                    <td className="py-2 px-4">{ebl365.ebl365Address}</td>
-                    <td className="py-2 px-4">{ebl365.ebl365StatusType}</td>
-                    <td className="py-2 px-4">{ebl365.ebl365Zone}</td>
-                    <td className="py-2 px-4">{ebl365.boothDevices}</td>
-                    <td className="py-2 px-4">{ebl365.noOfAvailableMachine}</td>
-                    <td className="py-2 px-4">{ebl365.noOfRunningMachine}</td>
+                    <td className="py-2 px-4">
+                      {boothManagement.ebl365.ebl365Name}
+                    </td>
+                    <td className="py-2 px-4">
+                      {boothManagement.ebl365.ebl365Address}
+                    </td>
+                    <td className="py-2 px-4">{boothManagement.numberOfAc}</td>
+                    <td className="py-2 px-4">
+                      {boothManagement.numberOfLight}
+                    </td>
+                    <td className="py-2 px-4">
+                      {boothManagement.numberOfMachine}
+                    </td>
+                    <td className="py-2 px-4">
+                      {boothManagement.numberOfMineralBoard}
+                    </td>
+                    <td className="py-2 px-4">{boothManagement.numberOfUps}</td>
+
                     <td className="py-2 px-4">
                       <Link
-                        href={`/ebl-365/${ebl365._id}`}
+                        href={`/booth-management/${boothManagement._id}`}
                         className="flex items-center text-gray-500 hover:text-blue-500 transition-all duration-300 transform hover:scale-105"
                       >
                         <span className="mr-2 border-b border-transparent hover:border-black hover:shadow-md">
                           Details
-                        </span>
-                      </Link>
-                    </td>
-                    <td className="py-2 px-4 ">
-                      <Link
-                        href={`/issue/drop-an-issue/${ebl365.id}`}
-                        className="flex items-center text-gray-500 hover:text-blue-500 transition-all duration-300 transform hover:scale-105"
-                      >
-                        <span className="mr-2 border-b border-transparent hover:border-black hover:shadow-md">
-                          Drop an issue
                         </span>
                       </Link>
                     </td>
@@ -89,4 +93,6 @@ export default function Ebl365Components() {
       )}
     </>
   );
-}
+};
+
+export default BoothManagementComponent;
