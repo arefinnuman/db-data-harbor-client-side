@@ -35,7 +35,6 @@ const SingleTerminalComponent = () => {
     ebl365,
   } = terminalData;
 
-  console.log(terminalData);
 
   const TableRow = ({ label, data }) => (
     <tr>

@@ -1,57 +1,46 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import logo from "@/assets/DB-Data-Harbor.png";
-import { clearUser } from "@/redux/user/userSlice";
+import logo from "@/assets/logo.gif";
+import { removeUser } from "@/redux/auth/authSlice";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Typewriter } from "react-simple-typewriter";
 import LoadingScreen from "./LoadingScreen";
 
 const NavbarComponent = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.user);
+
+  const user = useSelector((state) => state.auth.user?.user);
+
+  const fullName = [
+    user?.fullName?.firstName,
+    user?.fullName?.middleName,
+    user?.fullName?.lastName,
+  ]
+    .filter((namePart) => namePart)
+    .join(" ");
 
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleLogout = () => {
-    setLoading(true);
     setTimeout(() => {
-      localStorage.removeItem("token");
-      dispatch(clearUser());
+      dispatch(removeUser());
       router.push("/login");
       setLoading(false);
     }, 1000);
   };
 
-  const navbarItems = (
-    <>
-      <li>
-        <Link href="/ebl-365">Ebl 365</Link>
-      </li>
-      <li>
-        <Link href="/terminals">Terminals</Link>
-      </li>
-      <li>
-        <Link href="/booth-acquisition">Booth Acquisition</Link>
-      </li>
-      <li>
-        <Link href="/booth-management">Booth Management</Link>
-      </li>
-      <li>
-        <Link href="/issue-form">Issue Form</Link>
-      </li>
-    </>
-  );
   return (
     <div>
       {loading ? (
         <LoadingScreen />
       ) : (
-        <section>
-          <div className="navbar">
+        <section className="bg-gradient-to-r from-blue-200 via-yellow-300 to-pink-200 h-16">
+          <div className="navbar fixed top-0 left-0 right-0 bg-gradient-to-r from-blue-200 via-yellow-300 to-pink-200 h-14">
             <div className="navbar-start">
               <div className="dropdown">
                 <label tabIndex={0} className="btn btn-ghost lg:hidden">
@@ -73,31 +62,43 @@ const NavbarComponent = () => {
                 <ul
                   tabIndex={0}
                   className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-                >
-                  {navbarItems}
-                </ul>
+                ></ul>
               </div>
               <Link href="/">
-                <Image src={logo} alt="logo" width={150} height={100} />
+                <Image src={logo} alt="logo" width={200} height={100} />
               </Link>
             </div>
             <div className="navbar-center hidden lg:flex">
-              <ul className="menu menu-horizontal px-1">{navbarItems}</ul>
+              <ul className="menu menu-horizontal px-1">
+                <div>
+                  <span className="font-bold text-xl text-neutral py-2">
+                    <Typewriter
+                      words={[
+                        "DB Data Harbor",
+                        "Digital Banking",
+                        "Eastern Bank Plc.",
+                      ]}
+                      loop={999}
+                      cursor
+                      cursorStyle="_"
+                      typeSpeed={70}
+                      deleteSpeed={50}
+                      delaySpeed={1000}
+                    />
+                  </span>
+                </div>
+              </ul>
             </div>
             <div className="navbar-end">
-              {user ? (
-                <>
-                  <div>
-                    <button onClick={handleLogout}>Logout</button>
-                  </div>
-                </>
-              ) : (
-                <Link href="/login">
-                  <button className="btn btn-ghost btn-sm rounded-btn">
-                    Login
-                  </button>
-                </Link>
-              )}
+              <div>
+                <h1 className="mr-3 text-black">{fullName}</h1>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="bg-indigo-400 text-white font-semibold py-1 px-4 rounded-full transform transition-transform duration-200 hover:scale-105 focus:scale-95 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-60 shadow-lg"
+              >
+                Logout
+              </button>
             </div>
           </div>
         </section>

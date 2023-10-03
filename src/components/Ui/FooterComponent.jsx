@@ -1,7 +1,7 @@
 const FooterComponent = () => {
   return (
     <div>
-      <footer className="footer footer-center p-4 bg-secondary text-base-content">
+      <footer className="footer footer-center p-4 bg-neutral text-white">
         <div>
           <p>Copyright © 2023 - All right reserved by DB Data Harbor</p>
         </div>
@@ -11,4 +11,3 @@ const FooterComponent = () => {
 };
 
 export default FooterComponent;
-

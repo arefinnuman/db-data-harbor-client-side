@@ -9,7 +9,8 @@ import LoadingScreen from "../Ui/LoadingScreen";
 const DropAnIssueComponent = () => {
   const router = useRouter();
   const { id } = router.query;
-  const user = useSelector((state) => state.user.user);
+
+  const user = useSelector((state) => state.auth.user);
 
   const { data } = useGetBoothManagementByEbl365IdQuery(id);
   const boothManagementId = data?.data?.id;

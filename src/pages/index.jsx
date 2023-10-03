@@ -1,14 +1,13 @@
-import WelcomeSection from "@/components/Home/WelcomeSection";
-import RootLayout from "@/layout/RootLayout";
+import DashboardLayout from "@/layout/RootLayout";
 
 export default function HomePage() {
   return (
-    <main>
-      <WelcomeSection />
+    <main className="text-5xl font-bold ">
+      <h1>It is Dashboard Page, I will do it later</h1>
     </main>
   );
 }
 
 HomePage.getLayout = function getLayout(page) {
-  return <RootLayout>{page}</RootLayout>;
+  return <DashboardLayout>{page}</DashboardLayout>;
 };

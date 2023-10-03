@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -43,7 +43,6 @@ const LoginPage = () => {
   };
 
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.user);
 
   if (isLoading) {
     return <LoadingScreen />;

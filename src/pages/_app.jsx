@@ -1,14 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import store from "@/redux/store";
-import { clearUser, setUser } from "@/redux/user/userSlice";
 import "@/styles/globals.css";
-import jwtDecode from "jwt-decode";
 import { Poppins } from "next/font/google";
 import Head from "next/head";
 import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
-import { Provider, useDispatch } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 
 const poppins = Poppins({
   weight: "400",
@@ -16,31 +14,13 @@ const poppins = Poppins({
 });
 
 function InitUser({ children }) {
-  const dispatch = useDispatch();
-
-  function getUserFromToken() {
-    if (typeof window !== "undefined") {
-      const token = localStorage.getItem("token");
-      if (token) {
-        try {
-          const decodedToken = jwtDecode(token);
-          return decodedToken;
-        } catch (error) {
-          console.error("Error decoding token:", error);
-        }
-      }
-    }
-    return null;
-  }
+  const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    const userFromToken = getUserFromToken();
-    if (userFromToken) {
-      dispatch(setUser(userFromToken));
-    } else {
-      dispatch(clearUser());
+    if (user) {
+      // console.log(user);
     }
-  }, []);
+  }, [user]);
 
   return children;
 }
