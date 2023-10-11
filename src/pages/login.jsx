@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import LoadingScreen from "@/components/Ui/LoadingScreen";
 import { useLoginMutation } from "@/redux/auth/authApi";
-import { setToken } from "@/redux/auth/authSlice";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -29,7 +28,6 @@ const LoginPage = () => {
       if (response?.data?.success === true) {
         const accessToken = response?.data?.data?.accessToken;
         localStorage.setItem("token", accessToken);
-        dispatch(setToken(accessToken));
         toast.success("Login Successful !");
         setValue("employeeId", "");
         setValue("password", "");

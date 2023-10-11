@@ -1,7 +1,6 @@
 import { useGetSingleEbl365Query } from "@/redux/ebl365/ebl365Api";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import IssueFormInSingleEbl365Component from "../Issue/IssueFormInSingleEbl365";
 import LoadingScreen from "../Ui/LoadingScreen";
 
 const SingleEbl365Components = () => {
@@ -185,8 +184,6 @@ const SingleEbl365Components = () => {
               ))}
             </div>
           </div>
-
-          <IssueFormInSingleEbl365Component ebl365Id={id} />
         </section>
       )}
     </>

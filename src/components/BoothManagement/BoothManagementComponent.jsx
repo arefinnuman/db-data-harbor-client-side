@@ -37,6 +37,7 @@ const BoothManagementComponent = () => {
                     "Mineral Quantity",
                     "UPS Quantity",
                     "Details",
+                    "Action",
                   ].map((header) => (
                     <th
                       key={header}
@@ -80,6 +81,16 @@ const BoothManagementComponent = () => {
                       >
                         <span className="mr-2 border-b border-transparent hover:border-black hover:shadow-md">
                           Details
+                        </span>
+                      </Link>
+                    </td>
+                    <td className="py-2 px-4 ">
+                      <Link
+                        href={`/issue-form/drop-an-issue/${boothManagement.ebl365._id}`}
+                        className="flex items-center text-gray-500 hover:text-blue-500 transition-all duration-300 transform hover:scale-105"
+                      >
+                        <span className="mr-2 border-b border-transparent hover:border-black hover:shadow-md">
+                          Drop
                         </span>
                       </Link>
                     </td>

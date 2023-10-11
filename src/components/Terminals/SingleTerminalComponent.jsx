@@ -1,3 +1,4 @@
+import { useGetAssetBookValueByTerminalQuery } from "@/redux/assetBookValue/assetBookValueApi";
 import { useGetSingleTerminalQuery } from "@/redux/terminals/terminalApi";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -35,6 +36,15 @@ const SingleTerminalComponent = () => {
     ebl365,
   } = terminalData;
 
+  const { data: assetBookValue } = useGetAssetBookValueByTerminalQuery(id, {
+    pollingInterval: 90000,
+    refetchOnMountOrArgChange: true,
+  });
+
+  const assetBookValueData = assetBookValue?.data || {};
+
+  const { machineAge, procurementYear, purchaseMood, purchasePrice, _id } =
+    assetBookValueData;
 
   const TableRow = ({ label, data }) => (
     <tr>
@@ -51,73 +61,99 @@ const SingleTerminalComponent = () => {
       ) : (
         <section className="min-screen flex justify-center items-center py-12 px-4">
           <div className="bg-white p-10 rounded-lg w-full max-w-4xl shadow-xl transform hover:scale-105 transition-transform duration-300">
-            <div className="text-center space-y-4 pb-3 border-b border-gray-300">
-              <h1 className="text-xl font-bold text-primary">
-                TERMINAL DETAILS
-              </h1>
-              <p className="text-md text-gray-600">
-                Information for terminal ID:{"  "}
-                <span className="font-semibold">{terminalId}</span>
-              </p>
+            <div>
+              <div className="text-center space-y-4 pb-3 border-b border-gray-300">
+                <h1 className="text-xl font-bold text-primary">
+                  TERMINAL DETAILS
+                </h1>
+                <p className="text-md text-gray-600">
+                  Information for terminal ID:{"  "}
+                  <span className="font-semibold">{terminalId}</span>
+                </p>
+              </div>
+
+              <table className="min-w-full mt-8 space-y-4">
+                <tbody>
+                  <TableRow
+                    label="Terminal Name and ID"
+                    data={terminalNameAndId}
+                  />
+                  <TableRow label="Terminal ID" data={terminalId} />
+                  <TableRow label="Terminal Type" data={terminalType} />
+                  <TableRow label="Terminal Status" data={terminalStatus} />
+                  <TableRow label="Terminal Brand" data={terminalBrand} />
+                  <TableRow label="Terminal Model" data={terminalModel} />
+                  <TableRow label="Asset Tag Serial" data={assetTagSerial} />
+                  <TableRow label="GL Code" data={glCode} />
+                  <TableRow label="GL Number" data={glNumber} />
+                  <TableRow label="Insurance Limit" data={insuranceLimit} />
+                  <TableRow label="Deployment Date" data={deploymentDate} />
+                  <TableRow label="Live Date" data={liveDate} />
+                  <TableRow label="Number of BPM" data={numberOfBpm} />
+                  <TableRow
+                    label="Monthly Average Number of Transactions"
+                    data={monthlyAvgNoOfTxn}
+                  />
+                  <TableRow
+                    label="Monthly Average Volume of Transactions"
+                    data={monthlyAvgVolOfTxn}
+                  />
+                  <TableRow
+                    label="Monthly Number of Transactions"
+                    data={monthlyNoOfTransaction}
+                  />
+                  <TableRow
+                    label="Monthly Volume of Transactions"
+                    data={monthlyVolOfTransaction}
+                  />
+                </tbody>
+              </table>
             </div>
 
-            <table className="min-w-full mt-8 space-y-4">
-              <tbody>
-                <TableRow
-                  label="Terminal Name and ID"
-                  data={terminalNameAndId}
-                />
-                <TableRow label="Terminal ID" data={terminalId} />
-                <TableRow label="Terminal Type" data={terminalType} />
-                <TableRow label="Terminal Status" data={terminalStatus} />
-                <TableRow label="Terminal Brand" data={terminalBrand} />
-                <TableRow label="Terminal Model" data={terminalModel} />
-                <TableRow label="Asset Tag Serial" data={assetTagSerial} />
-                <TableRow label="GL Code" data={glCode} />
-                <TableRow label="GL Number" data={glNumber} />
-                <TableRow label="Insurance Limit" data={insuranceLimit} />
-                <TableRow label="Deployment Date" data={deploymentDate} />
-                <TableRow label="Live Date" data={liveDate} />
-                <TableRow label="Number of BPM" data={numberOfBpm} />
-                <TableRow
-                  label="Monthly Average Number of Transactions"
-                  data={monthlyAvgNoOfTxn}
-                />
-                <TableRow
-                  label="Monthly Average Volume of Transactions"
-                  data={monthlyAvgVolOfTxn}
-                />
-                <TableRow
-                  label="Monthly Number of Transactions"
-                  data={monthlyNoOfTransaction}
-                />
-                <TableRow
-                  label="Monthly Volume of Transactions"
-                  data={monthlyVolOfTransaction}
-                />
-              </tbody>
-            </table>
+            <div>
+              <h2 className="mt-6 mb-4 text-primary text-xl font-semibold text-center ">
+                Asset Book Value Details
+              </h2>
 
-            <h2 className="mt-6 mb-4 text-primary text-xl font-semibold text-center ">
-              365 BOOTH DETAILS
-            </h2>
+              <table className="min-w-full mt-4 space-y-4">
+                <tbody>
+                  <TableRow label="Machine Age" data={machineAge} />
+                  <TableRow label="Procurement Year" data={procurementYear} />
+                  <TableRow label="Purchase Mood" data={purchaseMood} />
+                  <TableRow label="Purchase Price" data={purchasePrice} />
+                </tbody>
+              </table>
 
-            <table className="min-w-full mt-4 space-y-4">
-              <tbody>
-                <TableRow label="Booth Name" data={ebl365.ebl365Name} />
-                <TableRow
-                  label="Running Machines"
-                  data={ebl365.noOfRunningMachine}
-                />
-                <TableRow
-                  label="Available Machines"
-                  data={ebl365.boothDevices}
-                />
-                <TableRow label="Booth Status" data={ebl365.ebl365StatusType} />
-                <TableRow label="Booth Zone" data={ebl365.ebl365Zone} />
-                <TableRow label="Booth Address" data={ebl365.ebl365Address} />
-              </tbody>
-            </table>
+              <div className="text-center m-3 text-blue-600">
+                click here to download to report
+              </div>
+            </div>
+
+            <div>
+              <h2 className="mt-6 mb-4 text-primary text-xl font-semibold text-center ">
+                365 BOOTH DETAILS
+              </h2>
+
+              <table className="min-w-full mt-4 space-y-4">
+                <tbody>
+                  <TableRow label="Booth Name" data={ebl365.ebl365Name} />
+                  <TableRow
+                    label="Running Machines"
+                    data={ebl365.noOfRunningMachine}
+                  />
+                  <TableRow
+                    label="Available Machines"
+                    data={ebl365.boothDevices}
+                  />
+                  <TableRow
+                    label="Booth Status"
+                    data={ebl365.ebl365StatusType}
+                  />
+                  <TableRow label="Booth Zone" data={ebl365.ebl365Zone} />
+                  <TableRow label="Booth Address" data={ebl365.ebl365Address} />
+                </tbody>
+              </table>
+            </div>
 
             <div className="mt-10 text-center">
               <Link
@@ -135,38 +171,3 @@ const SingleTerminalComponent = () => {
 };
 
 export default SingleTerminalComponent;
-
-{
-  /* <TableRow
-label="Terminal Name and ID"
-data={terminalNameAndId}
-/>
-<TableRow label="Terminal ID" data={terminalId} />
-<TableRow label="Terminal Type" data={terminalType} />
-<TableRow label="Terminal Status" data={terminalStatus} />
-<TableRow label="Terminal Brand" data={terminalBrand} />
-<TableRow label="Terminal Model" data={terminalModel} />
-<TableRow label="Asset Tag Serial" data={assetTagSerial} />
-<TableRow label="GL Code" data={glCode} />
-<TableRow label="GL Number" data={glNumber} />
-<TableRow label="Insurance Limit" data={insuranceLimit} />
-<TableRow label="Deployment Date" data={deploymentDate} />
-<TableRow label="Live Date" data={liveDate} />
-<TableRow
-label="Monthly Average Number of Transactions"
-data={monthlyAvgNoOfTxn}
-/>
-<TableRow
-label="Monthly Average Volume of Transactions"
-data={monthlyAvgVolOfTxn}
-/>
-<TableRow
-label="Monthly Number of Transactions"
-data={monthlyNoOfTransaction}
-/>
-<TableRow
-label="Monthly Volume of Transactions"
-data={monthlyVolOfTransaction}
-/>
-<TableRow label="Number of BPM" data={numberOfBpm} /> */
-}

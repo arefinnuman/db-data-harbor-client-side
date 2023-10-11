@@ -18,7 +18,6 @@ function InitUser({ children }) {
 
   useEffect(() => {
     if (user) {
-      // console.log(user);
     }
   }, [user]);
 

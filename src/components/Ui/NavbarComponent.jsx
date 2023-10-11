@@ -40,7 +40,7 @@ const NavbarComponent = () => {
         <LoadingScreen />
       ) : (
         <section className="bg-gradient-to-r from-blue-200 via-yellow-300 to-pink-200 h-16">
-          <div className="navbar fixed top-0 left-0 right-0 bg-gradient-to-r from-blue-200 via-yellow-300 to-pink-200 h-14">
+          <div className="navbar bg-gradient-to-r from-blue-200 via-yellow-300 to-pink-200 h-14">
             <div className="navbar-start">
               <div className="dropdown">
                 <label tabIndex={0} className="btn btn-ghost lg:hidden">

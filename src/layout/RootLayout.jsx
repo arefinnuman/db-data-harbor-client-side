@@ -44,9 +44,9 @@ export default function RootLayout({ children }) {
       <div className="flex min-h-screen">
         <SidebarComponent />
 
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <main className="flex-1 overflow-x-hidden overflow-y-auto">
-            <div className="container mx-auto p-4">{children}</div>
+        <div className="flex-1 flex flex-col container mx-auto overflow-hidden">
+          <main className="flex-1 overflow-x-hidden overflow-y-auto p-2">
+            {children}
           </main>
         </div>
       </div>

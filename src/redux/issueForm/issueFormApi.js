@@ -38,7 +38,7 @@ const issueFormApi = apiSlice.injectEndpoints({
 
     updateIssueToResolve: builder.mutation({
       query: (id) => ({
-        url: `/issue-form/resolved/${id}`,
+        url: `/issue-form/resolve/${id}`,
         method: "PATCH",
       }),
       invalidatesTags: ["issueforms"],

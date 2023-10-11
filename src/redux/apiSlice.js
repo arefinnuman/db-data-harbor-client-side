@@ -21,6 +21,7 @@ export const apiSlice = createApi({
     "ebl365",
     "users",
     "boothmanagements",
+    "assetBookValue",
   ],
 
   endpoints: () => ({}),

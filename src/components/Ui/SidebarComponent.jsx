@@ -1,41 +1,53 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
+import { FaCube, FaHome, FaTasks, FaTerminal, FaWpforms } from "react-icons/fa";
 
 function SidebarComponent() {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
-  const navbarItems = (
-    <>
-      <li className="p-4 border-b border-r-2 border-gray-300 hover:bg-blue-500">
-        <Link href="/ebl-365">Ebl 365</Link>
-      </li>
-      <li className="p-4 border-b border-r-2 border-gray-300 hover:bg-blue-500">
-        <Link href="/terminals">Terminals</Link>
-      </li>
-      <li className="p-4 border-b border-r-2 border-gray-300 hover:bg-blue-500">
-        <Link href="/booth-acquisition">Booth Acquisition</Link>
-      </li>
-      <li className="p-4 border-b border-r-2 border-gray-300 hover:bg-blue-500">
-        <Link href="/booth-management">Booth Management</Link>
-      </li>
-      <li className="p-4 border-b border-r-2 border-gray-300 hover:bg-blue-500">
-        <Link href="/issue-form">Issue Form</Link>
-      </li>
-    </>
-  );
+  const navbarItems = [
+    { href: "/ebl-365", label: "Ebl 365", Icon: FaHome },
+    { href: "/terminals", label: "Terminals", Icon: FaTerminal },
+    { href: "/booth-acquisition", label: "Booth Acquisition", Icon: FaCube },
+    { href: "/booth-management", label: "Booth Management", Icon: FaTasks },
+    { href: "/issue-form", label: "Issue Form", Icon: FaWpforms },
+  ];
 
   return (
-    <div>
-      <button className="lg:hidden p-4" onClick={() => setIsOpen(!isOpen)}>
+    <div className="relative">
+      <button
+        className="lg:hidden p-4"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-label="Toggle Sidebar"
+      >
         ☰
       </button>
 
       <aside
-        className={`transform top-0 left-0 w-64 absolute lg:relative transition-transform duration-200 ease-in-out ${
+        className={`bg-white shadow-lg transform top-0 left-0 w-64 min-h-screen fixed lg:relative transition-transform duration-200 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0`}
+        } lg:translate-x-0 overflow-y-auto`}
       >
-        <ul>{navbarItems}</ul>
+        <ul className="divide-y divide-gray-200">
+          {navbarItems.map((item, index) => (
+            <li
+              key={index}
+              className={`hover:bg-blue-500 transition-colors duration-200 ${
+                router.pathname === item.href ? "bg-blue-200" : ""
+              }`}
+            >
+              <Link
+                href={item.href}
+                className="flex items-center gap-4 p-4 text-gray-800 hover:text-white"
+              >
+                <item.Icon className="h-5 w-5" aria-hidden="true" />
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
       </aside>
     </div>
   );
