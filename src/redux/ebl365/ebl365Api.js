@@ -20,7 +20,7 @@ const ebl365Api = apiSlice.injectEndpoints({
     }),
 
     updateEbl365: builder.mutation({
-      query: ({ ebl365Data }) => ({
+      query: (ebl365Data) => ({
         url: `/ebl-365/${ebl365Data.id}`,
         method: "PATCH",
         body: ebl365Data,

@@ -1,18 +1,56 @@
 import dbDataHarborLogo from "@/assets/DB-Data-Harbor.png";
-import { useGetAllEbl365Query } from "@/redux/ebl365/ebl365Api";
+import {
+  useDeleteEbl365Mutation,
+  useGetAllEbl365Query,
+} from "@/redux/ebl365/ebl365Api";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { FaPlus } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import DeleteConfirmationModal from "../Ui/DeleteConfirmationModal";
 import LoadingScreen from "../Ui/LoadingScreen";
+import Update365Form from "./Update365Form";
 
 export default function Ebl365Components() {
-  const { data, isLoading } = useGetAllEbl365Query(undefined, {
+  const user = useSelector((state) => state.auth.user?.user);
+
+  const { data, isLoading, refetch } = useGetAllEbl365Query(undefined, {
     pollingInterval: 30000,
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true,
   });
 
   const ebl365Data = data?.data;
+
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [ebl365ToDelete, setEbl365ToDelete] = useState(null);
+
+  const [selectedUpdateBooth, setSelectedUpdateBooth] = useState(null);
+
+  const [delete365Booth] = useDeleteEbl365Mutation(undefined, {
+    pollingInterval: 30000,
+    refetchOnMountOrArgChange: true,
+  });
+
+  const handleDelete365Booth = async () => {
+    try {
+      const response = await delete365Booth(ebl365ToDelete);
+      console.log("res", response);
+      toast.success("EBL 365 deleted successfully");
+      refetch();
+      setShowDeleteConfirmation(false);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
+  const handleDeleteButtonClick = (branchId) => {
+    setEbl365ToDelete(branchId);
+    setShowDeleteConfirmation(true);
+  };
 
   return (
     <>
@@ -52,17 +90,22 @@ export default function Ebl365Components() {
                     "Total",
                     "Active",
                     "Details",
-                    "Action",
+                    ...(user?.role === "admin" || user?.role === "super_admin"
+                      ? ["Action"]
+                      : []),
                   ].map((header) => (
                     <th
                       key={header}
-                      className="py-2 px-4 text-left font-semibold border-b border-blue-300"
+                      className={`py-2 px-4 font-semibold border-b border-blue-300 ${
+                        header === "Action" ? "text-center" : "text-left"
+                      }`}
                     >
                       {header}
                     </th>
                   ))}
                 </tr>
               </thead>
+
               <tbody>
                 {ebl365Data?.map((ebl365, index) => (
                   <tr
@@ -88,11 +131,67 @@ export default function Ebl365Components() {
                         </span>
                       </Link>
                     </td>
+
+                    {(user?.role === "admin" ||
+                      user?.role === "super_admin") && (
+                      <td className="py-2 px-4 flex space-x-2">
+                        <button
+                          onClick={() => setSelectedUpdateBooth(ebl365)}
+                          className="flex items-center text-blue-500 hover:bg-blue-100 p-2 rounded transition-all duration-300 transform hover:scale-105"
+                        >
+                          <span className="mr-2 border-b border-transparent hover:border-blue-500 hover:shadow-md">
+                            Edit
+                          </span>
+                        </button>
+
+                        <button
+                          onClick={() => handleDeleteButtonClick(ebl365._id)}
+                          className="flex items-center text-red-500 hover:bg-red-100 p-2 rounded transition-all duration-300 transform hover:scale-105"
+                        >
+                          <span className="mr-2 border-b border-transparent hover:border-red-500 hover:shadow-md">
+                            Delete
+                          </span>
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+
+          {selectedUpdateBooth && (
+            <dialog
+              id="my_modal_2"
+              className="modal modal-bottom sm:modal-middle "
+              open
+            >
+              <section
+                method="dialog"
+                className="modal-box border border-primary shadow-2xl"
+              >
+                <Update365Form selectedUpdateBooth={selectedUpdateBooth} />
+                <div className="modal-action text-center flex justify-center">
+                  <button
+                    className="btn btn-sm btn-outline "
+                    onClick={() => setSelectedUpdateBooth(null)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </section>
+            </dialog>
+          )}
+
+          {showDeleteConfirmation && (
+            <DeleteConfirmationModal
+              onConfirm={() => {
+                handleDelete365Booth(ebl365ToDelete);
+                setShowDeleteConfirmation(false);
+              }}
+              onCancel={() => setShowDeleteConfirmation(false)}
+            />
+          )}
         </section>
       )}
     </>
