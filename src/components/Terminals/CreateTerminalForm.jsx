@@ -1,3 +1,4 @@
+import { useGetAllEbl365Query } from "@/redux/ebl365/ebl365Api";
 import { useCreateTerminalMutation } from "@/redux/terminals/terminalApi";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -54,6 +55,14 @@ const CreateTerminalForm = () => {
     }
   };
 
+  const { data: ebl365, isLoading } = useGetAllEbl365Query(undefined, {
+    pollingInterval: 30000,
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true,
+  });
+
+  const ebl365Data = ebl365?.data;
+
   return (
     <div>
       <form
@@ -64,12 +73,18 @@ const CreateTerminalForm = () => {
           <label className="label">
             <span className="label-text">Ebl 365</span>
           </label>
-          <input
-            type="text"
+          <select
             {...register("ebl365", { required: "EBL 365 is required" })}
-            className="input input-bordered input-primary w-full"
-            placeholder="Enter EBL 365"
-          />
+            className="select select-bordered select-primary w-full"
+          >
+            <option value="">Select EBL 365 Booth</option>
+            {ebl365Data &&
+              ebl365Data.map((ebl) => (
+                <option key={ebl.id} value={ebl.id}>
+                  {ebl.ebl365Name}
+                </option>
+              ))}
+          </select>
           {errors.name && (
             <p className="text-red-500">{errors.ebl365.message}</p>
           )}
