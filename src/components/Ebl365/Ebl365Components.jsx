@@ -36,13 +36,11 @@ export default function Ebl365Components() {
 
   const handleDelete365Booth = async () => {
     try {
-      const response = await delete365Booth(ebl365ToDelete);
-      console.log("res", response);
+      await delete365Booth(ebl365ToDelete);
       toast.success("EBL 365 deleted successfully");
       refetch();
       setShowDeleteConfirmation(false);
     } catch (error) {
-      console.log(error);
       toast.error(error.message);
     }
   };
@@ -59,14 +57,32 @@ export default function Ebl365Components() {
       ) : (
         <section className="px-6">
           <div className="flex justify-between items-center my-3">
-            <div>
-              <Link
-                href="/ebl-365/create"
-                className="flex items-center justify-center bg-blue-500 text-white py-2 px-4 rounded shadow hover:bg-blue-600 transition-colors"
-              >
-                <FaPlus className="mr-2" /> Create
-              </Link>
-            </div>
+            {user?.role === "admin" || user?.role === "super_admin" ? (
+              <div>
+                <Link
+                  href="/ebl-365/create"
+                  className="flex items-center justify-center bg-blue-500 text-white py-2 px-4 rounded shadow hover:bg-blue-600 transition-colors"
+                >
+                  <FaPlus className="mr-2" /> Create
+                </Link>
+              </div>
+            ) : (
+              <div>
+                <h2 className="text-2xl font-semibold text-gray-600">
+                  EBL 365
+                </h2>
+              </div>
+            )}
+
+            {user?.role === "admin" ||
+              (user?.role === "super_admin" && (
+                <div>
+                  <h2 className="text-2xl font-semibold text-gray-600">
+                    EBL 365
+                  </h2>
+                </div>
+              ))}
+
             <div>
               <Image
                 src={dbDataHarborLogo}

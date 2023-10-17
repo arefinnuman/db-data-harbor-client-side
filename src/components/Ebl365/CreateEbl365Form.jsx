@@ -12,7 +12,6 @@ const CreateEbl365Form = () => {
   const [createEbl365] = useCreateEbl365Mutation({});
 
   const onSubmit = async (data) => {
-    console.log("Button clicked");
     const ebl365Data = {
       ebl365Name: data.name,
       ebl365Address: data.address,
@@ -246,7 +245,7 @@ const CreateEbl365Form = () => {
           </label>
           <input
             type="number"
-            {...register("postalCOde", { required: "Postal COde is required" })}
+            {...register("postalCOde", { required: "Postal Code is required" })}
             className="input input-bordered input-primary w-full"
             placeholder="Enter Postal Code"
           />

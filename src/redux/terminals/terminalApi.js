@@ -20,7 +20,7 @@ const terminalApi = apiSlice.injectEndpoints({
     }),
 
     updateTerminal: builder.mutation({
-      query: ({ terminalData }) => ({
+      query: (terminalData) => ({
         url: `/terminals/${terminalData.id}`,
         method: "PATCH",
         body: terminalData,
