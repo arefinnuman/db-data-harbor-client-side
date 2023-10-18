@@ -85,7 +85,7 @@ const CreateTerminalForm = () => {
                 </option>
               ))}
           </select>
-          {errors.name && (
+          {errors.ebl365 && (
             <p className="text-red-500">{errors.ebl365.message}</p>
           )}
         </div>
@@ -102,7 +102,7 @@ const CreateTerminalForm = () => {
             className="input input-bordered input-primary w-full"
             placeholder="Enter Terminal Type"
           />
-          {errors.name && (
+          {errors.terminalType && (
             <p className="text-red-500">{errors.terminalType.message}</p>
           )}
         </div>
@@ -117,7 +117,7 @@ const CreateTerminalForm = () => {
             className="input input-bordered input-primary w-full"
             placeholder="Enter Terminal Id"
           />
-          {errors.name && (
+          {errors.terminalId && (
             <p className="text-red-500">{errors.terminalId.message}</p>
           )}
         </div>
@@ -134,7 +134,7 @@ const CreateTerminalForm = () => {
             className="input input-bordered input-primary w-full"
             placeholder="Enter Terminal Name and Id"
           />
-          {errors.name && (
+          {errors.terminalNameAndId && (
             <p className="text-red-500">{errors.terminalNameAndId.message}</p>
           )}
         </div>
@@ -151,7 +151,7 @@ const CreateTerminalForm = () => {
             className="input input-bordered input-primary w-full"
             placeholder="Enter Terminal Status"
           />
-          {errors.name && (
+          {errors.terminalStatus && (
             <p className="text-red-500">{errors.terminalStatus.message}</p>
           )}
         </div>
@@ -168,7 +168,7 @@ const CreateTerminalForm = () => {
             className="input input-bordered input-primary w-full"
             placeholder="Enter Terminal Brand"
           />
-          {errors.name && (
+          {errors.terminalBrand && (
             <p className="text-red-500">{errors.terminalBrand.message}</p>
           )}
         </div>
@@ -185,7 +185,7 @@ const CreateTerminalForm = () => {
             className="input input-bordered input-primary w-full"
             placeholder="Enter Terminal Model"
           />
-          {errors.name && (
+          {errors.terminalModel && (
             <p className="text-red-500">{errors.terminalModel.message}</p>
           )}
         </div>
@@ -200,7 +200,7 @@ const CreateTerminalForm = () => {
             className="input input-bordered input-primary w-full"
             placeholder="Enter GL Number"
           />
-          {errors.name && (
+          {errors.glNumber && (
             <p className="text-red-500">{errors.glNumber.message}</p>
           )}
         </div>
@@ -215,7 +215,7 @@ const CreateTerminalForm = () => {
             className="input input-bordered input-primary w-full"
             placeholder="Enter GL Code"
           />
-          {errors.name && (
+          {errors.glCode && (
             <p className="text-red-500">{errors.glCode.message}</p>
           )}
         </div>
@@ -232,7 +232,7 @@ const CreateTerminalForm = () => {
             className="input input-bordered input-primary w-full"
             placeholder="Enter Insurance Limit"
           />
-          {errors.name && (
+          {errors.insuranceLimit && (
             <p className="text-red-500">{errors.insuranceLimit.message}</p>
           )}
         </div>
@@ -249,7 +249,7 @@ const CreateTerminalForm = () => {
             className="input input-bordered input-primary w-full"
             placeholder="Enter Asset Tag Serial"
           />
-          {errors.name && (
+          {errors.assetTagSerial && (
             <p className="text-red-500">{errors.assetTagSerial.message}</p>
           )}
         </div>
@@ -266,7 +266,7 @@ const CreateTerminalForm = () => {
             className="input input-bordered input-primary w-full"
             placeholder="Enter Deployment Date"
           />
-          {errors.name && (
+          {errors.deploymentDate && (
             <p className="text-red-500">{errors.deploymentDate.message}</p>
           )}
         </div>
@@ -283,7 +283,7 @@ const CreateTerminalForm = () => {
             className="input input-bordered input-primary w-full"
             placeholder="Enter Live Date"
           />
-          {errors.name && (
+          {errors.liveDate && (
             <p className="text-red-500">{errors.liveDate.message}</p>
           )}
         </div>
@@ -300,7 +300,7 @@ const CreateTerminalForm = () => {
             className="input input-bordered input-primary w-full"
             placeholder="Enter Monthly No Of Transaction"
           />
-          {errors.name && (
+          {errors.monthlyNoOfTransaction && (
             <p className="text-red-500">
               {errors.monthlyNoOfTransaction.message}
             </p>
@@ -319,7 +319,7 @@ const CreateTerminalForm = () => {
             className="input input-bordered input-primary w-full"
             placeholder="Enter Monthly Vol Of Transaction"
           />
-          {errors.name && (
+          {errors.monthlyVolOfTransaction && (
             <p className="text-red-500">
               {errors.monthlyVolOfTransaction.message}
             </p>
@@ -338,7 +338,7 @@ const CreateTerminalForm = () => {
             className="input input-bordered input-primary w-full"
             placeholder="Enter Monthly Avg No Of Txn"
           />
-          {errors.name && (
+          {errors.monthlyAvgNoOfTxn && (
             <p className="text-red-500">{errors.monthlyAvgNoOfTxn.message}</p>
           )}
         </div>
@@ -355,7 +355,7 @@ const CreateTerminalForm = () => {
             className="input input-bordered input-primary w-full"
             placeholder="Enter Monthly Avg Vol Of Txn"
           />
-          {errors.name && (
+          {errors.monthlyAvgVolOfTxn && (
             <p className="text-red-500">{errors.monthlyAvgVolOfTxn.message}</p>
           )}
         </div>
@@ -372,7 +372,7 @@ const CreateTerminalForm = () => {
             className="input input-bordered input-primary w-full"
             placeholder="Enter Custodians Key Name"
           />
-          {errors.name && (
+          {errors.custodiansKeyName && (
             <p className="text-red-500">{errors.custodiansKeyName.message}</p>
           )}
         </div>
@@ -389,7 +389,7 @@ const CreateTerminalForm = () => {
             className="input input-bordered input-primary w-full"
             placeholder="Enter Custodians Key Contact Number"
           />
-          {errors.name && (
+          {errors.custodiansKeyContactNumber && (
             <p className="text-red-500">
               {errors.custodiansKeyContactNumber.message}
             </p>
@@ -408,7 +408,7 @@ const CreateTerminalForm = () => {
             className="input input-bordered input-primary w-full"
             placeholder="Enter Custodians Com Name"
           />
-          {errors.name && (
+          {errors.custodiansComName && (
             <p className="text-red-500">{errors.custodiansComName.message}</p>
           )}
         </div>
@@ -425,7 +425,7 @@ const CreateTerminalForm = () => {
             className="input input-bordered input-primary w-full"
             placeholder="Enter Custodians Com Contact Number"
           />
-          {errors.name && (
+          {errors.custodiansComContactNumber && (
             <p className="text-red-500">
               {errors.custodiansComContactNumber.message}
             </p>
@@ -444,7 +444,7 @@ const CreateTerminalForm = () => {
             className="input input-bordered input-primary w-full"
             placeholder="Enter Number Of Bpm"
           />
-          {errors.name && (
+          {errors.numberOfBpm && (
             <p className="text-red-500">{errors.numberOfBpm.message}</p>
           )}
         </div>

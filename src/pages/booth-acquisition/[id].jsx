@@ -1,4 +1,4 @@
-import SingleBoothAcquisition from "@/components/BoothAcqusition/SingleBoothAcquisition";
+import SingleBoothAcquisition from "@/components/BoothAcquisition/SingleBoothAcquisition";
 import RootLayout from "@/layout/RootLayout";
 
 const SingleBoothAcquisitionPage = () => {

@@ -1,4 +1,4 @@
-import BoothAcquisitionComponent from "@/components/BoothAcqusition/BoothAcquisitionComponent";
+import BoothAcquisitionComponent from "@/components/BoothAcquisition/BoothAcquisitionComponent";
 import RootLayout from "@/layout/RootLayout";
 
 const BoothAcquisitionPage = () => {

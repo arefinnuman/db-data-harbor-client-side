@@ -68,7 +68,7 @@ export default function TerminalsComponent() {
             ) : (
               <div>
                 <h2 className="text-2xl font-semibold text-gray-600">
-                  EBL 365
+                  TERMINALS
                 </h2>
               </div>
             )}
