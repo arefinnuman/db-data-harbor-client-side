@@ -1,18 +1,28 @@
 import dbDataHarborLogo from "@/assets/DB-Data-Harbor.png";
-import { useGetAllBoothAcquisitionQuery } from "@/redux/boothAcquisition/boothAcquisitionApi";
+import {
+  useDeleteBoothAcquisitionMutation,
+  useGetAllBoothAcquisitionQuery,
+} from "@/redux/boothAcquisition/boothAcquisitionApi";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { FaDownload, FaPlus } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import DeleteConfirmationModal from "../Ui/DeleteConfirmationModal";
 import LoadingScreen from "../Ui/LoadingScreen";
+import UpdateBoothAcquisitionForm from "./UpdateBoothAcquistionForm";
 
 const BoothAcquisitionComponent = () => {
-  const { data: boothAcquisitionAllData, isLoading } =
-    useGetAllBoothAcquisitionQuery(undefined, {
-      pollingInterval: 30000,
-      refetchOnMountOrArgChange: true,
-      refetchOnReconnect: true,
-    });
+  const {
+    data: boothAcquisitionAllData,
+    isLoading,
+    refetch,
+  } = useGetAllBoothAcquisitionQuery(undefined, {
+    pollingInterval: 30000,
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true,
+  });
 
   const boothAcquisitionData = boothAcquisitionAllData?.data;
 
@@ -29,6 +39,37 @@ const BoothAcquisitionComponent = () => {
   }
 
   const user = useSelector((state) => state.auth.user?.user);
+
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [boothAcquisitionToDelete, setBoothAcquisitionToDelete] =
+    useState(null);
+
+  const [selectedUpdateBoothAcquisition, setSelectedUpdateBoothAcquisition] =
+    useState(null);
+
+  const [delete365boothAcquisition] = useDeleteBoothAcquisitionMutation(
+    undefined,
+    {
+      pollingInterval: 30000,
+      refetchOnMountOrArgChange: true,
+    }
+  );
+
+  const handleDelete365boothAcquisition = async () => {
+    try {
+      await delete365boothAcquisition(boothAcquisitionToDelete);
+      toast.success("boothAcquisition deleted successfully");
+      refetch();
+      setShowDeleteConfirmation(false);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleDeleteButtonClick = (boothAcquisitionId) => {
+    setBoothAcquisitionToDelete(boothAcquisitionId);
+    setShowDeleteConfirmation(true);
+  };
 
   return (
     <>
@@ -73,7 +114,7 @@ const BoothAcquisitionComponent = () => {
             </div>
           </div>
 
-          <div className="w-full max-w-6xl m-auto overflow-x-auto shadow-md rounded-xl">
+          <div className="w-full max-w-7xl m-auto overflow-x-auto shadow-md rounded-xl">
             <table className="w-full bg-white border">
               <thead className="bg-blue-500 text-white">
                 <tr>
@@ -88,6 +129,9 @@ const BoothAcquisitionComponent = () => {
                     "Board Memo",
                     "Agreement Paper",
                     "Details",
+                    ...(user?.role === "admin" || user?.role === "super_admin"
+                      ? ["Action"]
+                      : []),
                   ].map((header) => (
                     <th
                       key={header}
@@ -113,7 +157,7 @@ const BoothAcquisitionComponent = () => {
                       {boothAcquisition.ebl365.ebl365Address}
                     </td>
                     <td className="py-2 px-4">
-                      {boothAcquisition.landOwnerInformation?.name}
+                      {boothAcquisition.landOwnerName}
                     </td>
                     <td className="py-2 px-4">
                       {boothAcquisition.boothMonthlyRent}
@@ -121,7 +165,9 @@ const BoothAcquisitionComponent = () => {
                     <td className="py-2 px-4">{boothAcquisition.boothSize}</td>
                     <td className="py-2 px-4">{boothAcquisition.boothType}</td>
                     <td className="py-2 px-4">
-                      {boothAcquisition.boothExpiryDate}
+                      {new Date(
+                        boothAcquisition.boothExpiryDate
+                      ).toLocaleDateString()}
                     </td>
                     <td className="py-2 px-4">
                       <div className="p-4">
@@ -147,11 +193,74 @@ const BoothAcquisitionComponent = () => {
                         </span>
                       </Link>
                     </td>
+
+                    {(user?.role === "admin" ||
+                      user?.role === "super_admin") && (
+                      <td className="py-2 px-4 flex space-x-2">
+                        <button
+                          onClick={() =>
+                            setSelectedUpdateBoothAcquisition(boothAcquisition)
+                          }
+                          className="flex items-center text-blue-500 hover:bg-blue-100 p-2 rounded transition-all duration-300 transform hover:scale-105"
+                        >
+                          <span className="mr-2 border-b border-transparent hover:border-blue-500 hover:shadow-md">
+                            Edit
+                          </span>
+                        </button>
+
+                        <button
+                          onClick={() =>
+                            handleDeleteButtonClick(boothAcquisition._id)
+                          }
+                          className="flex items-center text-red-500 hover:bg-red-100 p-2 rounded transition-all duration-300 transform hover:scale-105"
+                        >
+                          <span className="mr-2 border-b border-transparent hover:border-red-500 hover:shadow-md">
+                            Delete
+                          </span>
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+          {selectedUpdateBoothAcquisition && (
+            <dialog
+              id="my_modal_2"
+              className="modal modal-bottom sm:modal-middle "
+              open
+            >
+              <section
+                method="dialog"
+                className="modal-box border border-primary shadow-2xl"
+              >
+                <UpdateBoothAcquisitionForm
+                  selectedUpdateBoothAcquisition={
+                    selectedUpdateBoothAcquisition
+                  }
+                />
+                <div className="modal-action text-center flex justify-center">
+                  <button
+                    className="btn btn-sm btn-outline "
+                    onClick={() => setSelectedUpdateBoothAcquisition(null)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </section>
+            </dialog>
+          )}
+
+          {showDeleteConfirmation && (
+            <DeleteConfirmationModal
+              onConfirm={() => {
+                handleDelete365boothAcquisition(boothAcquisitionToDelete);
+                setShowDeleteConfirmation(false);
+              }}
+              onCancel={() => setShowDeleteConfirmation(false)}
+            />
+          )}
         </section>
       )}
     </>

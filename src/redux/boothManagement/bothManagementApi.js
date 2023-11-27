@@ -8,7 +8,7 @@ const boothManagementApi = apiSlice.injectEndpoints({
         method: "POST",
         body: boothManagementData,
       }),
-      invalidatesTags: ["boothManagement"],
+      invalidatesTags: ["boothmanagements"],
     }),
 
     getAllBoothManagement: builder.query({
@@ -24,12 +24,12 @@ const boothManagementApi = apiSlice.injectEndpoints({
     }),
 
     updateBoothManagement: builder.mutation({
-      query: ({ boothManagementData }) => ({
+      query: (boothManagementData) => ({
         url: `/booth-management/${boothManagementData.id}`,
         method: "PATCH",
         body: boothManagementData,
       }),
-      invalidatesTags: ["boothManagement"],
+      invalidatesTags: ["boothmanagements"],
     }),
 
     deleteBoothManagement: builder.mutation({
@@ -37,7 +37,7 @@ const boothManagementApi = apiSlice.injectEndpoints({
         url: `/booth-management/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["boothManagement"],
+      invalidatesTags: ["boothmanagements"],
     }),
   }),
 });

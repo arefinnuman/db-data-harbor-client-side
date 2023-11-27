@@ -8,7 +8,7 @@ const boothAcquisitionApi = apiSlice.injectEndpoints({
         method: "POST",
         body: boothAcquisitionData,
       }),
-      invalidatesTags: ["boothAcquisition"],
+      invalidatesTags: ["boothacquisitions"],
     }),
 
     getAllBoothAcquisition: builder.query({
@@ -20,12 +20,12 @@ const boothAcquisitionApi = apiSlice.injectEndpoints({
     }),
 
     updateBoothAcquisition: builder.mutation({
-      query: ({ boothAcquisitionData }) => ({
+      query: (boothAcquisitionData) => ({
         url: `/booth-acquisition/${boothAcquisitionData.id}`,
         method: "PATCH",
         body: boothAcquisitionData,
       }),
-      invalidatesTags: ["boothAcquisition"],
+      invalidatesTags: ["boothacquisitions"],
     }),
 
     deleteBoothAcquisition: builder.mutation({
@@ -33,7 +33,7 @@ const boothAcquisitionApi = apiSlice.injectEndpoints({
         url: `/booth-acquisition/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["boothAcquisition"],
+      invalidatesTags: ["boothacquisitions"],
     }),
   }),
 });

@@ -44,6 +44,7 @@ const CreateTerminalForm = () => {
 
     try {
       const response = await createTerminal(terminalData);
+      console.log("response", response);
       if (response?.data?.statusCode === 200) {
         toast.success("Terminal updated successfully");
         window.location.reload();
@@ -94,14 +95,20 @@ const CreateTerminalForm = () => {
           <label className="label">
             <span className="label-text">Terminal Type</span>
           </label>
-          <input
-            type="text"
+          <select
             {...register("terminalType", {
               required: "Terminal Type is required",
             })}
-            className="input input-bordered input-primary w-full"
-            placeholder="Enter Terminal Type"
-          />
+            className="select select-bordered select-primary w-full"
+          >
+            <option value="">Select Terminal Type</option>
+            <option value="Atm">Atm</option>
+            <option value="Crm">Crm</option>
+            <option value="Rtdm">Rtdm</option>
+            <option value="Dropbox">Dropbox</option>
+            <option value="Cdm">Cdm</option>
+            <option value="Check Sorting Machine">Check Sorting Machine</option>
+          </select>
           {errors.terminalType && (
             <p className="text-red-500">{errors.terminalType.message}</p>
           )}
@@ -141,16 +148,19 @@ const CreateTerminalForm = () => {
 
         <div className="form-control mb-3">
           <label className="label">
-            <span className="label-text">Terminal Status</span>
+            <span className="label-text">Status Type</span>
           </label>
-          <input
-            type="text"
+          <select
             {...register("terminalStatus", {
-              required: "Terminal Status is required",
+              required: "Status Type is required",
             })}
-            className="input input-bordered input-primary w-full"
-            placeholder="Enter Terminal Status"
-          />
+            className="select select-bordered select-primary w-full"
+          >
+            <option value="">Select Status Type</option>
+            <option value="Active">Active</option>
+            <option value="Out of Service">Out of Service</option>
+            <option value="Inactive">Inactive</option>
+          </select>
           {errors.terminalStatus && (
             <p className="text-red-500">{errors.terminalStatus.message}</p>
           )}
@@ -160,14 +170,18 @@ const CreateTerminalForm = () => {
           <label className="label">
             <span className="label-text">Terminal Brand</span>
           </label>
-          <input
-            type="text"
+          <select
             {...register("terminalBrand", {
               required: "Terminal Brand is required",
             })}
-            className="input input-bordered input-primary w-full"
-            placeholder="Enter Terminal Brand"
-          />
+            className="select select-bordered select-primary w-full"
+          >
+            <option value="">Select Brand</option>
+            <option value="NCR">NCR</option>
+            <option value="GRG">GRG</option>
+            <option value="Vortex">Vortex</option>
+            <option value="Others">Others</option>
+          </select>
           {errors.terminalBrand && (
             <p className="text-red-500">{errors.terminalBrand.message}</p>
           )}
@@ -259,12 +273,12 @@ const CreateTerminalForm = () => {
             <span className="label-text">Deployment Date</span>
           </label>
           <input
-            type="text"
+            type="date"
             {...register("deploymentDate", {
               required: "Deployment Date is required",
             })}
             className="input input-bordered input-primary w-full"
-            placeholder="Enter Deployment Date"
+            placeholder="Select Deployment Date"
           />
           {errors.deploymentDate && (
             <p className="text-red-500">{errors.deploymentDate.message}</p>
@@ -276,7 +290,7 @@ const CreateTerminalForm = () => {
             <span className="label-text">Live Date</span>
           </label>
           <input
-            type="text"
+            type="date"
             {...register("liveDate", {
               required: "Live Date is required",
             })}
