@@ -2,7 +2,6 @@ import {
   useCreateBoothAcquisitionMutation,
   useGetUnassignedBoothQuery,
 } from "@/redux/boothAcquisition/boothAcquisitionApi";
-import { useGetAllEbl365Query } from "@/redux/ebl365/ebl365Api";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -49,12 +48,6 @@ const CreateBoothAcquisitionForm = () => {
     }
   };
 
-  const { data: ebl365, isLoading } = useGetAllEbl365Query(undefined, {
-    pollingInterval: 30000,
-    refetchOnMountOrArgChange: true,
-    refetchOnReconnect: true,
-  });
-
   const { data: unAssignedEbl365 } = useGetUnassignedBoothQuery(undefined, {
     pollingInterval: 30000,
     refetchOnMountOrArgChange: true,
@@ -63,8 +56,6 @@ const CreateBoothAcquisitionForm = () => {
 
   const unAssignedEbl365Data = unAssignedEbl365?.data;
 
-  const ebl365Data = ebl365?.data;
-
   return (
     <div>
       <form
@@ -72,6 +63,9 @@ const CreateBoothAcquisitionForm = () => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <section>
+          <h1 className="text-xl font-bold mb-2 text-primary">
+            Create Acquisition for a Booth
+          </h1>
           <div className="form-control mb-3">
             <label className="label">
               <span className="label-text">Ebl 365</span>

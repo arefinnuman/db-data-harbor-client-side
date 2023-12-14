@@ -2,7 +2,6 @@ import {
   useCreateBoothManagementMutation,
   useGetUnassignedBoothQuery,
 } from "@/redux/boothManagement/bothManagementApi";
-import { useGetAllEbl365Query } from "@/redux/ebl365/ebl365Api";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -41,13 +40,13 @@ const CreateBoothManagementForm = () => {
     }
   };
 
-  const { data: ebl365, isLoading } = useGetAllEbl365Query(undefined, {
-    pollingInterval: 30000,
-    refetchOnMountOrArgChange: true,
-    refetchOnReconnect: true,
-  });
+  // const { data: ebl365, isLoading } = useGetAllEbl365Query(undefined, {
+  //   pollingInterval: 30000,
+  //   refetchOnMountOrArgChange: true,
+  //   refetchOnReconnect: true,
+  // });
 
-  const ebl365Data = ebl365?.data;
+  // const ebl365Data = ebl365?.data;
 
   const { data: unAssignedEbl365 } = useGetUnassignedBoothQuery(undefined, {
     pollingInterval: 30000,

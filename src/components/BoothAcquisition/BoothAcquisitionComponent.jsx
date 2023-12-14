@@ -2,6 +2,7 @@ import dbDataHarborLogo from "@/assets/DB-Data-Harbor.png";
 import {
   useDeleteBoothAcquisitionMutation,
   useGetAllBoothAcquisitionQuery,
+  useGetUnassignedBoothQuery,
 } from "@/redux/boothAcquisition/boothAcquisitionApi";
 import Image from "next/image";
 import Link from "next/link";
@@ -69,6 +70,26 @@ const BoothAcquisitionComponent = () => {
   const handleDeleteButtonClick = (boothAcquisitionId) => {
     setBoothAcquisitionToDelete(boothAcquisitionId);
     setShowDeleteConfirmation(true);
+  };
+
+  const { data: unAssignedEbl365 } = useGetUnassignedBoothQuery(undefined, {
+    pollingInterval: 30000,
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true,
+  });
+
+  const unAssignedEbl365Data = unAssignedEbl365?.data;
+
+  const hasUnassignedBooths =
+    unAssignedEbl365Data && unAssignedEbl365Data.length > 0;
+
+  const renderUnassignedBooths = () => {
+    return unAssignedEbl365Data.map((booth, index) => (
+      <li key={booth.id}>
+        {booth.ebl365Name}
+        {index < unAssignedEbl365Data.length - 1 ? "" : ""}
+      </li>
+    ));
   };
 
   return (
@@ -260,6 +281,23 @@ const BoothAcquisitionComponent = () => {
               }}
               onCancel={() => setShowDeleteConfirmation(false)}
             />
+          )}
+
+          {hasUnassignedBooths && (
+            <div className="mt-5">
+              <div className="p-4 mb-4 rounded-lg bg-yellow-100 border-yellow-400 border-l-4">
+                <h5 className="text-yellow-800 text-lg font-semibold mb-2">
+                  Attention: Unassigned Booths
+                </h5>
+                <p className="text-yellow-700 mb-3">
+                  The following booths are currently unassigned. Please assign
+                  them soon:
+                </p>
+                <ul className="list-disc list-inside pl-5">
+                  {renderUnassignedBooths()}
+                </ul>
+              </div>
+            </div>
           )}
         </section>
       )}
