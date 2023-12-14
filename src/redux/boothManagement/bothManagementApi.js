@@ -15,6 +15,10 @@ const boothManagementApi = apiSlice.injectEndpoints({
       query: () => "/booth-management",
     }),
 
+    getUnassignedBooth: builder.query({
+      query: () => "/booth-management/unassigned",
+    }),
+
     getSingleBoothManagement: builder.query({
       query: (id) => `/booth-management/${id}`,
     }),
@@ -45,6 +49,7 @@ const boothManagementApi = apiSlice.injectEndpoints({
 export const {
   useCreateBoothManagementMutation,
   useGetAllBoothManagementQuery,
+  useGetUnassignedBoothQuery,
   useGetSingleBoothManagementQuery,
   useGetBoothManagementByEbl365IdQuery,
   useUpdateBoothManagementMutation,

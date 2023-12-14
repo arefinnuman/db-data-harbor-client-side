@@ -62,6 +62,8 @@ const CreateTerminalForm = () => {
     refetchOnReconnect: true,
   });
 
+  
+
   const ebl365Data = ebl365?.data;
 
   return (
@@ -70,6 +72,7 @@ const CreateTerminalForm = () => {
         className="w-full max-w-md mx-auto p-4 shadow-lg rounded-lg bg-white"
         onSubmit={handleSubmit(onSubmit)}
       >
+        <h1 className="text-2xl my-2">Create a New Terminal</h1>
         <div className="form-control mb-3">
           <label className="label">
             <span className="label-text">Ebl 365</span>

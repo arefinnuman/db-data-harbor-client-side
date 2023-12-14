@@ -15,6 +15,10 @@ const boothAcquisitionApi = apiSlice.injectEndpoints({
       query: () => "/booth-acquisition",
     }),
 
+    getUnassignedBooth: builder.query({
+      query: () => "/booth-acquisition/unassigned",
+    }),
+
     getSingleBoothAcquisition: builder.query({
       query: (id) => `/booth-acquisition/${id}`,
     }),
@@ -41,6 +45,7 @@ const boothAcquisitionApi = apiSlice.injectEndpoints({
 export const {
   useCreateBoothAcquisitionMutation,
   useGetAllBoothAcquisitionQuery,
+  useGetUnassignedBoothQuery,
   useGetSingleBoothAcquisitionQuery,
   useUpdateBoothAcquisitionMutation,
   useDeleteBoothAcquisitionMutation,
