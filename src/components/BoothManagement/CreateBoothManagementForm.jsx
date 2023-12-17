@@ -1,6 +1,6 @@
 import {
   useCreateBoothManagementMutation,
-  useGetUnassignedBoothQuery,
+  useGetUnassignedBoothForBoothManagementQuery,
 } from "@/redux/boothManagement/bothManagementApi";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -40,26 +40,19 @@ const CreateBoothManagementForm = () => {
     }
   };
 
-  // const { data: ebl365, isLoading } = useGetAllEbl365Query(undefined, {
-  //   pollingInterval: 30000,
-  //   refetchOnMountOrArgChange: true,
-  //   refetchOnReconnect: true,
-  // });
-
-  // const ebl365Data = ebl365?.data;
-
-  const { data: unAssignedEbl365 } = useGetUnassignedBoothQuery(undefined, {
-    pollingInterval: 30000,
-    refetchOnMountOrArgChange: true,
-    refetchOnReconnect: true,
-  });
+  const { data: unAssignedEbl365 } =
+    useGetUnassignedBoothForBoothManagementQuery(undefined, {
+      pollingInterval: 30000,
+      refetchOnMountOrArgChange: true,
+      refetchOnReconnect: true,
+    });
 
   const unAssignedEbl365Data = unAssignedEbl365?.data;
 
   return (
     <div>
-      <h1 className="text-2xl text-center my-2">
-        Create it for Booth Management
+      <h1 className="text-xl font-bold mb-2 text-primary">
+        Create management for a Booth
       </h1>
       <form
         className="w-full max-w-md mx-auto p-4 shadow-lg rounded-lg bg-white"

@@ -60,7 +60,7 @@ const issueFormApi = apiSlice.injectEndpoints({
       query: () => "/issue-form/resolved",
     }),
 
-    getPendingIssuesByEbl3656: builder.query({
+    getPendingIssuesByEbl365: builder.query({
       query: (ebl365Id) => `/issue-form/pending/${ebl365Id}`,
     }),
 

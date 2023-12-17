@@ -1,9 +1,15 @@
+import dbDataHarborLogo from "@/assets/DB-Data-Harbor.png";
 import {
   useGetPendingIssuesQuery,
   useGetResolvedIssuesQuery,
+  useUpdateIssueToPendingMutation,
   useUpdateIssueToResolveMutation,
 } from "@/redux/issueForm/issueFormApi";
+import Image from "next/image";
+import Link from "next/link";
 import toast from "react-hot-toast";
+import { FaPlus } from "react-icons/fa";
+import { useSelector } from "react-redux";
 import LoadingScreen from "../Ui/LoadingScreen";
 
 const IssueFormComponent = () => {
@@ -12,7 +18,7 @@ const IssueFormComponent = () => {
     isLoading: isLoadingPending,
     refetch: refetchPending,
   } = useGetPendingIssuesQuery(undefined, {
-    pollingInterval: 30000,
+    pollingInterval: 3000,
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true,
   });
@@ -22,7 +28,7 @@ const IssueFormComponent = () => {
     isLoading: isLoadingResolved,
     refetch: refetchResolved,
   } = useGetResolvedIssuesQuery(undefined, {
-    pollingInterval: 30000,
+    pollingInterval: 3000,
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true,
   });
@@ -31,12 +37,23 @@ const IssueFormComponent = () => {
   const resolvedIssuesFormData = resolvedIssues?.data;
 
   const [solvedIssue] = useUpdateIssueToResolveMutation();
+  const [pendingIssue] = useUpdateIssueToPendingMutation();
 
-  const handleSolvedIssue = async (id) => {
+  const handleToResolve = async (id) => {
     try {
       const response = await solvedIssue(id);
       toast.success(response?.data?.message);
       refetchPending();
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  };
+
+  const handleToPending = async (id) => {
+    try {
+      const response = await pendingIssue(id);
+      toast.success(response?.data?.message);
+      refetchResolved();
     } catch (error) {
       toast.error(error?.response?.data?.message);
     }
@@ -71,6 +88,7 @@ const IssueFormComponent = () => {
       </td>
     );
   }
+  const user = useSelector((state) => state?.auth?.user?.user);
 
   return (
     <div>
@@ -78,7 +96,35 @@ const IssueFormComponent = () => {
         {isLoadingPending ? (
           <LoadingScreen />
         ) : (
-          <div>
+          <section>
+            <div className="flex justify-between items-center my-3">
+              {user?.role === "admin" || user?.role === "super_admin" ? (
+                <div>
+                  <Link
+                    href="/issue-form/drop-an-issue"
+                    className="flex items-center justify-center bg-blue-500 text-white py-2 px-4 rounded shadow hover:bg-blue-600 transition-colors"
+                  >
+                    <FaPlus className="mr-2" /> Create
+                  </Link>
+                </div>
+              ) : (
+                <div>
+                  <h2 className="text-2xl font-semibold text-gray-600">
+                    Issues
+                  </h2>
+                </div>
+              )}
+
+              <div>
+                <Image
+                  src={dbDataHarborLogo}
+                  alt="logo"
+                  width={200}
+                  height={100}
+                />
+              </div>
+            </div>
+
             {pendingIssueFormData?.length > 0 && (
               <div>
                 <h1 className="text-2xl text-center font-semibold mb-4">
@@ -99,7 +145,7 @@ const IssueFormComponent = () => {
                         ].map((header) => (
                           <th
                             key={header}
-                            className="py-2 px-4 text-left font-semibold border-b border-blue-300"
+                            className="py-3 px-4 text-left font-semibold border-b border-blue-300"
                           >
                             {header}
                           </th>
@@ -111,7 +157,7 @@ const IssueFormComponent = () => {
                         <tr
                           key={pendingIssueForm.id}
                           className={`${
-                            index % 2 === 0 ? "bg-white" : "bg-white"
+                            index % 2 === 0 ? "bg-gray-100" : "bg-white"
                           } hover:bg-blue-50 transition duration-150`}
                         >
                           <td className="py-2 px-4">
@@ -139,12 +185,12 @@ const IssueFormComponent = () => {
                           </td>
                           <td className="py-2 px-4">
                             <button
-                              className="btn btn-primary"
+                              className="btn btn-primary bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-full px-3 py-1 transform transition-transform hover:scale-105 focus:outline-none"
                               onClick={() =>
-                                handleSolvedIssue(pendingIssueForm.id)
+                                handleToResolve(pendingIssueForm.id)
                               }
                             >
-                              Mark as Resolved
+                              Resolved
                             </button>
                           </td>
                         </tr>
@@ -175,7 +221,7 @@ const IssueFormComponent = () => {
                         ].map((header) => (
                           <th
                             key={header}
-                            className="py-2 px-4 text-left font-semibold border-b border-blue-300"
+                            className="py-3 px-4 text-left font-semibold border-b border-blue-300"
                           >
                             {header}
                           </th>
@@ -188,7 +234,7 @@ const IssueFormComponent = () => {
                           <tr
                             key={resolvedIssuesForm.id}
                             className={`${
-                              index % 2 === 0 ? "bg-white" : "bg-white"
+                              index % 2 === 0 ? "bg-gray-100" : "bg-white"
                             } hover:bg-blue-50 transition duration-150`}
                           >
                             <td className="py-2 px-4">
@@ -215,8 +261,13 @@ const IssueFormComponent = () => {
                               {resolvedIssuesForm.issueStatus}
                             </td>
                             <td className="py-2 px-4">
-                              <button className="btn btn-primary">
-                                Resolved
+                              <button
+                                className="btn btn-primary bg-green-500 hover:bg-green-600 text-white font-semibold rounded-full px-3 py-1 transform transition-transform hover:scale-105 focus:outline-none"
+                                onClick={() =>
+                                  handleToPending(resolvedIssuesForm.id)
+                                }
+                              >
+                                Reopen
                               </button>
                             </td>
                           </tr>
@@ -227,7 +278,7 @@ const IssueFormComponent = () => {
                 </div>
               </div>
             )}
-          </div>
+          </section>
         )}
       </section>
     </div>

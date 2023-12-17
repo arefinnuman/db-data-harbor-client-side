@@ -2,7 +2,7 @@ import dbDataHarborLogo from "@/assets/DB-Data-Harbor.png";
 import {
   useDeleteBoothAcquisitionMutation,
   useGetAllBoothAcquisitionQuery,
-  useGetUnassignedBoothQuery,
+  useGetUnassignedBoothForAcquisitionQuery,
 } from "@/redux/boothAcquisition/boothAcquisitionApi";
 import Image from "next/image";
 import Link from "next/link";
@@ -72,11 +72,14 @@ const BoothAcquisitionComponent = () => {
     setShowDeleteConfirmation(true);
   };
 
-  const { data: unAssignedEbl365 } = useGetUnassignedBoothQuery(undefined, {
-    pollingInterval: 30000,
-    refetchOnMountOrArgChange: true,
-    refetchOnReconnect: true,
-  });
+  const { data: unAssignedEbl365 } = useGetUnassignedBoothForAcquisitionQuery(
+    undefined,
+    {
+      pollingInterval: 30000,
+      refetchOnMountOrArgChange: true,
+      refetchOnReconnect: true,
+    }
+  );
 
   const unAssignedEbl365Data = unAssignedEbl365?.data;
 
