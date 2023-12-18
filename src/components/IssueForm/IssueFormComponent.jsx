@@ -1,5 +1,6 @@
 import dbDataHarborLogo from "@/assets/DB-Data-Harbor.png";
 import {
+  useDeleteIssueFormMutation,
   useGetPendingIssuesQuery,
   useGetResolvedIssuesQuery,
   useUpdateIssueToPendingMutation,
@@ -7,10 +8,13 @@ import {
 } from "@/redux/issueForm/issueFormApi";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { FaPlus } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import DeleteConfirmationModal from "../Ui/DeleteConfirmationModal";
 import LoadingScreen from "../Ui/LoadingScreen";
+import UpdateIssueForm from "./UpdateIssueForm";
 
 const IssueFormComponent = () => {
   const {
@@ -18,7 +22,7 @@ const IssueFormComponent = () => {
     isLoading: isLoadingPending,
     refetch: refetchPending,
   } = useGetPendingIssuesQuery(undefined, {
-    pollingInterval: 3000,
+    pollingInterval: 30000,
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true,
   });
@@ -28,7 +32,7 @@ const IssueFormComponent = () => {
     isLoading: isLoadingResolved,
     refetch: refetchResolved,
   } = useGetResolvedIssuesQuery(undefined, {
-    pollingInterval: 3000,
+    pollingInterval: 30000,
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true,
   });
@@ -88,7 +92,39 @@ const IssueFormComponent = () => {
       </td>
     );
   }
+
   const user = useSelector((state) => state?.auth?.user?.user);
+
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+
+  const [issueToDelete, setIssueToDelete] = useState(null);
+
+  const [selectedUpdateIssue, setSelectedUpdateIssue] = useState(null);
+
+  const [deleteIssue] = useDeleteIssueFormMutation(undefined, {
+    pollingInterval: 30000,
+    refetchOnMountOrArgChange: true,
+  });
+
+  const handleDeleteIssue = async () => {
+    try {
+      const res = await deleteIssue(issueToDelete);
+      console.log("res", res);
+      toast.success("issue deleted successfully");
+      refetchPending();
+      setShowDeleteConfirmation(false);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+  const handleDeleteButtonClick = (issueId) => {
+    if (issueId) {
+      setIssueToDelete(issueId);
+      setShowDeleteConfirmation(true);
+    } else {
+      console.log("issueId is null or undefined");
+    }
+  };
 
   return (
     <div>
@@ -125,6 +161,7 @@ const IssueFormComponent = () => {
               </div>
             </div>
 
+            {/* Pending Issues */}
             {pendingIssueFormData?.length > 0 && (
               <div>
                 <h1 className="text-2xl text-center font-semibold mb-4">
@@ -142,6 +179,8 @@ const IssueFormComponent = () => {
                           "Submitted Date",
                           "Status",
                           "Action",
+                          "Details",
+                          "Action2",
                         ].map((header) => (
                           <th
                             key={header}
@@ -193,6 +232,43 @@ const IssueFormComponent = () => {
                               Resolved
                             </button>
                           </td>
+                          <td className="py-2 px-4">
+                            <Link
+                              href={`/booth-acquisition/${pendingIssue.id}`}
+                              className="flex items-center text-gray-500 hover:text-blue-500 transition-all duration-300 transform hover:scale-105"
+                            >
+                              <span className="mr-2 border-b border-transparent hover:border-black hover:shadow-md">
+                                Details
+                              </span>
+                            </Link>
+                          </td>
+
+                          {(user?.role === "admin" ||
+                            user?.role === "super_admin") && (
+                            <td className="py-2 px-4 flex space-x-2 items-center justify-center">
+                              <button
+                                onClick={() =>
+                                  setSelectedUpdateIssue(pendingIssue)
+                                }
+                                className="flex items-center text-blue-500 hover:bg-blue-100 p-2 rounded transition-all duration-300 transform hover:scale-105"
+                              >
+                                <span className="mr-2 border-b border-transparent hover:border-blue-500 hover:shadow-md">
+                                  Edit
+                                </span>
+                              </button>
+
+                              <button
+                                onClick={() =>
+                                  handleDeleteButtonClick(pendingIssueForm._id)
+                                }
+                                className="flex items-center text-red-500 hover:bg-red-100 p-2 rounded transition-all duration-300 transform hover:scale-105"
+                              >
+                                <span className="mr-2 border-b border-transparent hover:border-red-500 hover:shadow-md">
+                                  Delete
+                                </span>
+                              </button>
+                            </td>
+                          )}
                         </tr>
                       ))}
                     </tbody>
@@ -201,6 +277,40 @@ const IssueFormComponent = () => {
               </div>
             )}
 
+            {selectedUpdateIssue && (
+              <dialog
+                id="my_modal_2"
+                className="modal modal-bottom sm:modal-middle "
+                open
+              >
+                <section
+                  method="dialog"
+                  className="modal-box border border-primary shadow-2xl"
+                >
+                  <UpdateIssueForm selectedUpdateIssue={selectedUpdateIssue} />
+                  <div className="modal-action text-center flex justify-center">
+                    <button
+                      className="btn btn-sm btn-outline "
+                      onClick={() => setSelectedUpdateIssue(null)}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </section>
+              </dialog>
+            )}
+
+            {showDeleteConfirmation && (
+              <DeleteConfirmationModal
+                onConfirm={() => {
+                  handleDeleteIssue(issueToDelete);
+                  setShowDeleteConfirmation(false);
+                }}
+                onCancel={() => setShowDeleteConfirmation(false)}
+              />
+            )}
+
+            {/* Resolved Issues */}
             {resolvedIssuesFormData?.length > 0 && (
               <div>
                 <h1 className="text-2xl text-center font-semibold my-4">

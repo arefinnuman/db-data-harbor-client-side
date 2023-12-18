@@ -159,7 +159,9 @@ const BoothAcquisitionComponent = () => {
                   ].map((header) => (
                     <th
                       key={header}
-                      className="py-2 px-4 text-left font-semibold border-b border-blue-300"
+                      className={`py-2 px-4 font-semibold border-b border-blue-300 ${
+                        header === "Action" ? "text-center" : "text-left"
+                      }`}
                     >
                       {header}
                     </th>
@@ -220,7 +222,7 @@ const BoothAcquisitionComponent = () => {
 
                     {(user?.role === "admin" ||
                       user?.role === "super_admin") && (
-                      <td className="py-2 px-4 flex space-x-2">
+                      <td className="py-2 px-4 flex space-x-2 items-center justify-center">
                         <button
                           onClick={() =>
                             setSelectedUpdateBoothAcquisition(boothAcquisition)
