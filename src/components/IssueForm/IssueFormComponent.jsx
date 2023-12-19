@@ -199,106 +199,87 @@ const IssueFormComponent = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {issueFormData?.map((pendingIssueForm, index) => (
+                    {issueFormData?.map((issue, index) => (
                       <tr
-                        key={pendingIssueForm.id}
+                        key={issue.id}
                         className={`${
                           index % 2 === 0 ? "bg-gray-100" : "bg-white"
                         } hover:bg-blue-50 transition duration-150`}
                       >
                         <td className="py-2 px-4">
-                          {pendingIssueForm.boothManagement?.ebl365.ebl365Name}
+                          {issue.boothManagement?.ebl365.ebl365Name}
                         </td>
                         <td className="py-2 px-4">
-                          {
-                            pendingIssueForm.boothManagement?.ebl365
-                              .ebl365Address
-                          }
+                          {issue.boothManagement?.ebl365.ebl365Address}
                         </td>
-                        <BoothProblems issueForm={pendingIssueForm} />
+                        <BoothProblems issueForm={issue} />
                         <td className="py-2 px-4">
-                          {pendingIssueForm.issueSubmittedDate
+                          {issue.issueSubmittedDate
                             ? new Date(
-                                pendingIssueForm.issueSubmittedDate
+                                issue.issueSubmittedDate
                               ).toLocaleDateString()
                             : ""}
                         </td>
                         <td className="py-2 px-4">
                           <div
                             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${
-                              pendingIssueForm.issueStatus.toLowerCase() ===
-                              "pending"
+                              issue.issueStatus.toLowerCase() === "pending"
                                 ? "bg-red-100 text-red-800"
-                                : pendingIssueForm.issueStatus.toLowerCase() ===
+                                : issue.issueStatus.toLowerCase() ===
                                   "in progress"
                                 ? "bg-yellow-100 text-yellow-800"
-                                : pendingIssueForm.issueStatus.toLowerCase() ===
-                                  "resolved"
+                                : issue.issueStatus.toLowerCase() === "resolved"
                                 ? "bg-green-100 text-green-800"
                                 : "bg-gray-100 text-gray-800"
                             }`}
                           >
-                            {pendingIssueForm.issueStatus}
+                            {issue.issueStatus}
                           </div>
                         </td>
 
                         <td className="py-2 px-4">
-                          {pendingIssueForm.issueStatus.toLowerCase() ===
-                          "pending" ? (
+                          {issue.issueStatus.toLowerCase() === "pending" ? (
                             <>
                               <button
                                 className="text-blue-500 hover:border-blue-600 rounded px-3 py-1 mr-2 cursor-pointer hover:bg-blue-500 hover:text-white transition ease-in-out duration-300"
-                                onClick={() =>
-                                  handleToResolve(pendingIssueForm.id)
-                                }
+                                onClick={() => handleToResolve(issue.id)}
                               >
                                 Resolve
                               </button>
                               <button
                                 className="text-yellow-500 hover:border-yellow-600 rounded px-3 py-1 cursor-pointer hover:bg-yellow-500 hover:text-white transition ease-in-out duration-300"
-                                onClick={() =>
-                                  handleToInprogress(pendingIssueForm.id)
-                                }
+                                onClick={() => handleToInprogress(issue.id)}
                               >
                                 In Progress
                               </button>
                             </>
-                          ) : pendingIssueForm.issueStatus.toLowerCase() ===
-                            "resolved" ? (
+                          ) : issue.issueStatus.toLowerCase() === "resolved" ? (
                             <>
                               <button
                                 className="text-green-500 hover:border-green-600 rounded px-3 py-1 cursor-pointer hover:bg-green-500 hover:text-white transition ease-in-out duration-300"
-                                onClick={() =>
-                                  handleToPending(pendingIssueForm.id)
-                                }
+                                onClick={() => handleToPending(issue.id)}
                               >
                                 Pending
                               </button>
                               <button
                                 className="text-yellow-500 hover:border-yellow-600 rounded px-3 py-1 cursor-pointer hover:bg-yellow-500 hover:text-white transition ease-in-out duration-300"
-                                onClick={() =>
-                                  handleToInprogress(pendingIssueForm.id)
-                                }
+                                onClick={() => handleToInprogress(issue.id)}
                               >
                                 In Progress
                               </button>
                             </>
-                          ) : pendingIssueForm.issueStatus.toLowerCase() ===
+                          ) : issue.issueStatus.toLowerCase() ===
                             "in progress" ? (
                             <>
                               <button
                                 className="text-yellow-500 hover:border-yellow-600 rounded px-3 py-1 cursor-pointer hover:bg-yellow-500 hover:text-white transition ease-in-out duration-300"
-                                onClick={() =>
-                                  handleToPending(pendingIssueForm.id)
-                                }
+                                onClick={() => handleToPending(issue.id)}
                               >
                                 Pending
                               </button>
                               <button
                                 className="text-blue-500 hover:border-blue-600 rounded px-3 py-1 mr-2 cursor-pointer hover:bg-blue-500 hover:text-white transition ease-in-out duration-300"
-                                onClick={() =>
-                                  handleToResolve(pendingIssueForm.id)
-                                }
+                                onClick={() => handleToResolve(issue.id)}
                               >
                                 Resolve
                               </button>
@@ -315,7 +296,7 @@ const IssueFormComponent = () => {
 
                         <td className="py-2 px-4">
                           <Link
-                            href={`/booth-acquisition/${pendingIssue.id}`}
+                            href={`/issue-form/${issue.id}`}
                             className="flex items-center text-gray-500 hover:text-blue-500 transition-all duration-300 transform hover:scale-105"
                           >
                             <span className="mr-2 border-b border-transparent hover:border-black hover:shadow-md">
@@ -328,9 +309,7 @@ const IssueFormComponent = () => {
                           user?.role === "super_admin") && (
                           <td className="py-2 px-4 flex space-x-2 items-center justify-center">
                             <button
-                              onClick={() =>
-                                handleDeleteButtonClick(pendingIssueForm._id)
-                              }
+                              onClick={() => handleDeleteButtonClick(issue._id)}
                               className="flex items-center text-red-500 hover:bg-red-100 p-2 rounded transition-all duration-300 transform hover:scale-105"
                             >
                               <span className="mr-2 border-b border-transparent hover:border-red-500 hover:shadow-md">
