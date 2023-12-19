@@ -1,10 +1,10 @@
 import dbDataHarborLogo from "@/assets/DB-Data-Harbor.png";
 import {
   useDeleteIssueFormMutation,
-  useGetPendingIssuesQuery,
-  useGetResolvedIssuesQuery,
+  useGetAllIssueFormQuery,
   useUpdateIssueToPendingMutation,
   useUpdateIssueToResolveMutation,
+  useUpdateToInProgressMutation,
 } from "@/redux/issueForm/issueFormApi";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,40 +14,29 @@ import { FaPlus } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import DeleteConfirmationModal from "../Ui/DeleteConfirmationModal";
 import LoadingScreen from "../Ui/LoadingScreen";
-import UpdateIssueForm from "./UpdateIssueForm";
 
 const IssueFormComponent = () => {
   const {
-    data: pendingIssues,
-    isLoading: isLoadingPending,
-    refetch: refetchPending,
-  } = useGetPendingIssuesQuery(undefined, {
-    pollingInterval: 30000,
+    data: allIssues,
+    isLoading,
+    refetch,
+  } = useGetAllIssueFormQuery(undefined, {
+    pollingInterval: 9000,
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true,
   });
 
-  const {
-    data: resolvedIssues,
-    isLoading: isLoadingResolved,
-    refetch: refetchResolved,
-  } = useGetResolvedIssuesQuery(undefined, {
-    pollingInterval: 30000,
-    refetchOnMountOrArgChange: true,
-    refetchOnReconnect: true,
-  });
-
-  const pendingIssueFormData = pendingIssues?.data;
-  const resolvedIssuesFormData = resolvedIssues?.data;
+  const issueFormData = allIssues?.data;
 
   const [solvedIssue] = useUpdateIssueToResolveMutation();
   const [pendingIssue] = useUpdateIssueToPendingMutation();
+  const [inprogressIssue] = useUpdateToInProgressMutation();
 
   const handleToResolve = async (id) => {
     try {
       const response = await solvedIssue(id);
       toast.success(response?.data?.message);
-      refetchPending();
+      refetch();
     } catch (error) {
       toast.error(error?.response?.data?.message);
     }
@@ -57,7 +46,18 @@ const IssueFormComponent = () => {
     try {
       const response = await pendingIssue(id);
       toast.success(response?.data?.message);
-      refetchResolved();
+      refetch();
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  };
+
+  const handleToInprogress = async (id) => {
+    try {
+      const response = await inprogressIssue(id);
+      console.log("response", response);
+      toast.success(response?.data?.message);
+      refetch();
     } catch (error) {
       toast.error(error?.response?.data?.message);
     }
@@ -83,11 +83,17 @@ const IssueFormComponent = () => {
 
     return (
       <td className="py-2 px-4">
-        {existingProblems.map((problem) => (
-          <div key={problem}>* {issueForm[problem]}</div>
-        ))}
+        <ul className="list-disc pl-5 space-y-1">
+          {existingProblems.map((problem) => (
+            <li key={problem} className="text-gray-700 text-sm font-medium">
+              {issueForm[problem]}
+            </li>
+          ))}
+        </ul>
         {existingProblems.length === problemKeys.length && (
-          <div>All problems are present.</div>
+          <div className="text-red-500 text-sm font-bold mt-2">
+            All problems are present.
+          </div>
         )}
       </td>
     );
@@ -96,10 +102,7 @@ const IssueFormComponent = () => {
   const user = useSelector((state) => state?.auth?.user?.user);
 
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-
   const [issueToDelete, setIssueToDelete] = useState(null);
-
-  const [selectedUpdateIssue, setSelectedUpdateIssue] = useState(null);
 
   const [deleteIssue] = useDeleteIssueFormMutation(undefined, {
     pollingInterval: 30000,
@@ -108,15 +111,16 @@ const IssueFormComponent = () => {
 
   const handleDeleteIssue = async () => {
     try {
-      const res = await deleteIssue(issueToDelete);
-      console.log("res", res);
+      await deleteIssue(issueToDelete);
       toast.success("issue deleted successfully");
-      refetchPending();
+      refetch();
+      refetch();
       setShowDeleteConfirmation(false);
     } catch (error) {
       toast.error(error.message);
     }
   };
+
   const handleDeleteButtonClick = (issueId) => {
     if (issueId) {
       setIssueToDelete(issueId);
@@ -129,7 +133,7 @@ const IssueFormComponent = () => {
   return (
     <div>
       <section className="p-6">
-        {isLoadingPending ? (
+        {isLoading ? (
           <LoadingScreen />
         ) : (
           <section>
@@ -146,10 +150,19 @@ const IssueFormComponent = () => {
               ) : (
                 <div>
                   <h2 className="text-2xl font-semibold text-gray-600">
-                    Issues
+                    Issue Forms
                   </h2>
                 </div>
               )}
+
+              {user?.role === "admin" ||
+                (user?.role === "super_admin" && (
+                  <div>
+                    <h2 className="text-2xl font-semibold text-gray-600">
+                      Issue Form
+                    </h2>
+                  </div>
+                ))}
 
               <div>
                 <Image
@@ -161,144 +174,177 @@ const IssueFormComponent = () => {
               </div>
             </div>
 
-            {/* Pending Issues */}
-            {pendingIssueFormData?.length > 0 && (
-              <div>
-                <h1 className="text-2xl text-center font-semibold mb-4">
-                  Pending Issues
-                </h1>
-
-                <div className="w-full max-w-6xl m-auto overflow-x-auto shadow-md rounded-xl">
-                  <table className="w-full bg-white border">
-                    <thead className="bg-blue-500 text-white">
-                      <tr>
-                        {[
-                          "Name",
-                          "Address",
-                          "Problem",
-                          "Submitted Date",
-                          "Status",
-                          "Action",
-                          "Details",
-                          "Action2",
-                        ].map((header) => (
-                          <th
-                            key={header}
-                            className="py-3 px-4 text-left font-semibold border-b border-blue-300"
-                          >
-                            {header}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {pendingIssueFormData?.map((pendingIssueForm, index) => (
-                        <tr
-                          key={pendingIssueForm.id}
-                          className={`${
-                            index % 2 === 0 ? "bg-gray-100" : "bg-white"
-                          } hover:bg-blue-50 transition duration-150`}
+            <div>
+              <div className="w-full max-w-6xl m-auto overflow-x-auto shadow-md rounded-xl">
+                <table className="w-full bg-white border">
+                  <thead className="bg-blue-500 text-white">
+                    <tr>
+                      {[
+                        "Name",
+                        "Address",
+                        "Problems",
+                        "Submitted Date",
+                        "Status",
+                        "Mark as",
+                        "Details",
+                        "Delete",
+                      ].map((header) => (
+                        <th
+                          key={header}
+                          className="py-3 px-4 text-left font-semibold border-b border-blue-300"
                         >
-                          <td className="py-2 px-4">
-                            {
-                              pendingIssueForm.boothManagement?.ebl365
-                                .ebl365Name
-                            }
-                          </td>
-                          <td className="py-2 px-4">
-                            {
-                              pendingIssueForm.boothManagement?.ebl365
-                                .ebl365Address
-                            }
-                          </td>
-                          <BoothProblems issueForm={pendingIssueForm} />
-                          <td className="py-2 px-4">
-                            {pendingIssueForm.issueSubmittedDate
-                              ? new Date(
-                                  pendingIssueForm.issueSubmittedDate
-                                ).toLocaleDateString()
-                              : ""}
-                          </td>
-                          <td className="py-2 px-4">
+                          {header}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {issueFormData?.map((pendingIssueForm, index) => (
+                      <tr
+                        key={pendingIssueForm.id}
+                        className={`${
+                          index % 2 === 0 ? "bg-gray-100" : "bg-white"
+                        } hover:bg-blue-50 transition duration-150`}
+                      >
+                        <td className="py-2 px-4">
+                          {pendingIssueForm.boothManagement?.ebl365.ebl365Name}
+                        </td>
+                        <td className="py-2 px-4">
+                          {
+                            pendingIssueForm.boothManagement?.ebl365
+                              .ebl365Address
+                          }
+                        </td>
+                        <BoothProblems issueForm={pendingIssueForm} />
+                        <td className="py-2 px-4">
+                          {pendingIssueForm.issueSubmittedDate
+                            ? new Date(
+                                pendingIssueForm.issueSubmittedDate
+                              ).toLocaleDateString()
+                            : ""}
+                        </td>
+                        <td className="py-2 px-4">
+                          <div
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${
+                              pendingIssueForm.issueStatus.toLowerCase() ===
+                              "pending"
+                                ? "bg-red-100 text-red-800"
+                                : pendingIssueForm.issueStatus.toLowerCase() ===
+                                  "in progress"
+                                ? "bg-yellow-100 text-yellow-800"
+                                : pendingIssueForm.issueStatus.toLowerCase() ===
+                                  "resolved"
+                                ? "bg-green-100 text-green-800"
+                                : "bg-gray-100 text-gray-800"
+                            }`}
+                          >
                             {pendingIssueForm.issueStatus}
-                          </td>
-                          <td className="py-2 px-4">
+                          </div>
+                        </td>
+
+                        <td className="py-2 px-4">
+                          {pendingIssueForm.issueStatus.toLowerCase() ===
+                          "pending" ? (
+                            <>
+                              <button
+                                className="text-blue-500 hover:border-blue-600 rounded px-3 py-1 mr-2 cursor-pointer hover:bg-blue-500 hover:text-white transition ease-in-out duration-300"
+                                onClick={() =>
+                                  handleToResolve(pendingIssueForm.id)
+                                }
+                              >
+                                Resolve
+                              </button>
+                              <button
+                                className="text-yellow-500 hover:border-yellow-600 rounded px-3 py-1 cursor-pointer hover:bg-yellow-500 hover:text-white transition ease-in-out duration-300"
+                                onClick={() =>
+                                  handleToInprogress(pendingIssueForm.id)
+                                }
+                              >
+                                In Progress
+                              </button>
+                            </>
+                          ) : pendingIssueForm.issueStatus.toLowerCase() ===
+                            "resolved" ? (
+                            <>
+                              <button
+                                className="text-green-500 hover:border-green-600 rounded px-3 py-1 cursor-pointer hover:bg-green-500 hover:text-white transition ease-in-out duration-300"
+                                onClick={() =>
+                                  handleToPending(pendingIssueForm.id)
+                                }
+                              >
+                                Pending
+                              </button>
+                              <button
+                                className="text-yellow-500 hover:border-yellow-600 rounded px-3 py-1 cursor-pointer hover:bg-yellow-500 hover:text-white transition ease-in-out duration-300"
+                                onClick={() =>
+                                  handleToInprogress(pendingIssueForm.id)
+                                }
+                              >
+                                In Progress
+                              </button>
+                            </>
+                          ) : pendingIssueForm.issueStatus.toLowerCase() ===
+                            "in progress" ? (
+                            <>
+                              <button
+                                className="text-yellow-500 hover:border-yellow-600 rounded px-3 py-1 cursor-pointer hover:bg-yellow-500 hover:text-white transition ease-in-out duration-300"
+                                onClick={() =>
+                                  handleToPending(pendingIssueForm.id)
+                                }
+                              >
+                                Pending
+                              </button>
+                              <button
+                                className="text-blue-500 hover:border-blue-600 rounded px-3 py-1 mr-2 cursor-pointer hover:bg-blue-500 hover:text-white transition ease-in-out duration-300"
+                                onClick={() =>
+                                  handleToResolve(pendingIssueForm.id)
+                                }
+                              >
+                                Resolve
+                              </button>
+                            </>
+                          ) : (
                             <button
-                              className="btn btn-primary bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-full px-3 py-1 transform transition-transform hover:scale-105 focus:outline-none"
-                              onClick={() =>
-                                handleToResolve(pendingIssueForm.id)
-                              }
+                              className="text-gray-500 hover:border-gray-600 rounded px-3 py-1 cursor-pointer hover:bg-gray-500 hover:text-white transition ease-in-out duration-300"
+                              disabled
                             >
-                              Resolved
+                              Status Unavailable
+                            </button>
+                          )}
+                        </td>
+
+                        <td className="py-2 px-4">
+                          <Link
+                            href={`/booth-acquisition/${pendingIssue.id}`}
+                            className="flex items-center text-gray-500 hover:text-blue-500 transition-all duration-300 transform hover:scale-105"
+                          >
+                            <span className="mr-2 border-b border-transparent hover:border-black hover:shadow-md">
+                              Details
+                            </span>
+                          </Link>
+                        </td>
+
+                        {(user?.role === "admin" ||
+                          user?.role === "super_admin") && (
+                          <td className="py-2 px-4 flex space-x-2 items-center justify-center">
+                            <button
+                              onClick={() =>
+                                handleDeleteButtonClick(pendingIssueForm._id)
+                              }
+                              className="flex items-center text-red-500 hover:bg-red-100 p-2 rounded transition-all duration-300 transform hover:scale-105"
+                            >
+                              <span className="mr-2 border-b border-transparent hover:border-red-500 hover:shadow-md">
+                                Delete
+                              </span>
                             </button>
                           </td>
-                          <td className="py-2 px-4">
-                            <Link
-                              href={`/booth-acquisition/${pendingIssue.id}`}
-                              className="flex items-center text-gray-500 hover:text-blue-500 transition-all duration-300 transform hover:scale-105"
-                            >
-                              <span className="mr-2 border-b border-transparent hover:border-black hover:shadow-md">
-                                Details
-                              </span>
-                            </Link>
-                          </td>
-
-                          {(user?.role === "admin" ||
-                            user?.role === "super_admin") && (
-                            <td className="py-2 px-4 flex space-x-2 items-center justify-center">
-                              <button
-                                onClick={() =>
-                                  setSelectedUpdateIssue(pendingIssue)
-                                }
-                                className="flex items-center text-blue-500 hover:bg-blue-100 p-2 rounded transition-all duration-300 transform hover:scale-105"
-                              >
-                                <span className="mr-2 border-b border-transparent hover:border-blue-500 hover:shadow-md">
-                                  Edit
-                                </span>
-                              </button>
-
-                              <button
-                                onClick={() =>
-                                  handleDeleteButtonClick(pendingIssueForm._id)
-                                }
-                                className="flex items-center text-red-500 hover:bg-red-100 p-2 rounded transition-all duration-300 transform hover:scale-105"
-                              >
-                                <span className="mr-2 border-b border-transparent hover:border-red-500 hover:shadow-md">
-                                  Delete
-                                </span>
-                              </button>
-                            </td>
-                          )}
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-            )}
-
-            {selectedUpdateIssue && (
-              <dialog
-                id="my_modal_2"
-                className="modal modal-bottom sm:modal-middle "
-                open
-              >
-                <section
-                  method="dialog"
-                  className="modal-box border border-primary shadow-2xl"
-                >
-                  <UpdateIssueForm selectedUpdateIssue={selectedUpdateIssue} />
-                  <div className="modal-action text-center flex justify-center">
-                    <button
-                      className="btn btn-sm btn-outline "
-                      onClick={() => setSelectedUpdateIssue(null)}
-                    >
-                      Close
-                    </button>
-                  </div>
-                </section>
-              </dialog>
-            )}
+            </div>
 
             {showDeleteConfirmation && (
               <DeleteConfirmationModal
@@ -308,85 +354,6 @@ const IssueFormComponent = () => {
                 }}
                 onCancel={() => setShowDeleteConfirmation(false)}
               />
-            )}
-
-            {/* Resolved Issues */}
-            {resolvedIssuesFormData?.length > 0 && (
-              <div>
-                <h1 className="text-2xl text-center font-semibold my-4">
-                  Resolved Issues
-                </h1>
-
-                <div className="w-full max-w-6xl m-auto overflow-x-auto shadow-md rounded-xl">
-                  <table className="w-full bg-white border">
-                    <thead className="bg-blue-500 text-white">
-                      <tr>
-                        {[
-                          "Name",
-                          "Address",
-                          "Problem",
-                          "Submitted Date",
-                          "Status",
-                          "Action",
-                        ].map((header) => (
-                          <th
-                            key={header}
-                            className="py-3 px-4 text-left font-semibold border-b border-blue-300"
-                          >
-                            {header}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {resolvedIssuesFormData?.map(
-                        (resolvedIssuesForm, index) => (
-                          <tr
-                            key={resolvedIssuesForm.id}
-                            className={`${
-                              index % 2 === 0 ? "bg-gray-100" : "bg-white"
-                            } hover:bg-blue-50 transition duration-150`}
-                          >
-                            <td className="py-2 px-4">
-                              {
-                                resolvedIssuesForm.boothManagement?.ebl365
-                                  .ebl365Name
-                              }
-                            </td>
-                            <td className="py-2 px-4">
-                              {
-                                resolvedIssuesForm.boothManagement?.ebl365
-                                  .ebl365Address
-                              }
-                            </td>
-                            <BoothProblems issueForm={resolvedIssuesForm} />
-                            <td className="py-2 px-4">
-                              {resolvedIssuesForm.issueSubmittedDate
-                                ? new Date(
-                                    resolvedIssuesForm.issueSubmittedDate
-                                  ).toLocaleDateString()
-                                : ""}
-                            </td>
-                            <td className="py-2 px-4">
-                              {resolvedIssuesForm.issueStatus}
-                            </td>
-                            <td className="py-2 px-4">
-                              <button
-                                className="btn btn-primary bg-green-500 hover:bg-green-600 text-white font-semibold rounded-full px-3 py-1 transform transition-transform hover:scale-105 focus:outline-none"
-                                onClick={() =>
-                                  handleToPending(resolvedIssuesForm.id)
-                                }
-                              >
-                                Reopen
-                              </button>
-                            </td>
-                          </tr>
-                        )
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
             )}
           </section>
         )}

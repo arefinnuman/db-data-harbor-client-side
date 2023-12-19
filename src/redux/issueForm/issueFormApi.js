@@ -52,6 +52,14 @@ const issueFormApi = apiSlice.injectEndpoints({
       invalidatesTags: ["issueforms"],
     }),
 
+    updateToInProgress: builder.mutation({
+      query: (id) => ({
+        url: `/issue-form/in-progress/${id}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["issueforms"],
+    }),
+
     getPendingIssues: builder.query({
       query: () => "/issue-form/pending",
     }),
@@ -87,4 +95,5 @@ export const {
   useGetPendingIssuesByEbl365Query,
   useGetResolvedIssuesByEbl365Query,
   useGetIssuesByEbl365Query,
+  useUpdateToInProgressMutation,
 } = issueFormApi;
