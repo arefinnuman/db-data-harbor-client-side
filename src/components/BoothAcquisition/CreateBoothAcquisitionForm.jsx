@@ -31,10 +31,8 @@ const CreateBoothAcquisitionForm = () => {
         data.agreementBetweenEblAndBoothOwner[0],
     };
 
-    console.log("boardMemo", boothAcquisitionData.boardMemo);
     try {
       const response = await createBoothAcquisition(boothAcquisitionData);
-      console.log("response", response);
       if (response?.data?.statusCode === 200) {
         toast.success("BoothAcquisition updated successfully");
         window.location.reload();

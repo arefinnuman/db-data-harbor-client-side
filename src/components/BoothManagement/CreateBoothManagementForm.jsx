@@ -26,7 +26,6 @@ const CreateBoothManagementForm = () => {
 
     try {
       const response = await createBoothManagement(boothManagementData);
-      console.log("response", response);
       if (response?.data?.statusCode === 200) {
         toast.success("BoothManagement updated successfully");
         window.location.reload();

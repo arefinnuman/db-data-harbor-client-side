@@ -224,9 +224,9 @@ const BoothAcquisitionComponent = () => {
                       user?.role === "super_admin") && (
                       <td className="py-2 px-4 flex space-x-2 items-center justify-center">
                         <button
-                          onClick={() =>
-                            setSelectedUpdateBoothAcquisition(boothAcquisition)
-                          }
+                          onClick={() => {
+                            setSelectedUpdateBoothAcquisition(boothAcquisition);
+                          }}
                           className="flex items-center text-blue-500 hover:bg-blue-100 p-2 rounded transition-all duration-300 transform hover:scale-105"
                         >
                           <span className="mr-2 border-b border-transparent hover:border-blue-500 hover:shadow-md">
@@ -251,6 +251,7 @@ const BoothAcquisitionComponent = () => {
               </tbody>
             </table>
           </div>
+
           {selectedUpdateBoothAcquisition && (
             <dialog
               id="my_modal_2"

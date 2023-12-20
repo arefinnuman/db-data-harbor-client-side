@@ -55,7 +55,6 @@ const IssueFormComponent = () => {
   const handleToInprogress = async (id) => {
     try {
       const response = await inprogressIssue(id);
-      console.log("response", response);
       toast.success(response?.data?.message);
       refetch();
     } catch (error) {
@@ -126,7 +125,7 @@ const IssueFormComponent = () => {
       setIssueToDelete(issueId);
       setShowDeleteConfirmation(true);
     } else {
-      console.log("issueId is null or undefined");
+      toast.error("Something went wrong");
     }
   };
 

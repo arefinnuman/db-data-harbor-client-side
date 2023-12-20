@@ -44,7 +44,6 @@ const CreateTerminalForm = () => {
 
     try {
       const response = await createTerminal(terminalData);
-      console.log("response", response);
       if (response?.data?.statusCode === 200) {
         toast.success("Terminal updated successfully");
         window.location.reload();
@@ -61,8 +60,6 @@ const CreateTerminalForm = () => {
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true,
   });
-
-  
 
   const ebl365Data = ebl365?.data;
 

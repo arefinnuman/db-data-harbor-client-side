@@ -1,4 +1,3 @@
-import { useGetAllEbl365Query } from "@/redux/ebl365/ebl365Api";
 import { useUpdateTerminalMutation } from "@/redux/terminals/terminalApi";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -13,14 +12,6 @@ const UpdateTerminalForm = ({ selectedUpdateTerminal }) => {
   } = useForm();
 
   const [updateTerminal] = useUpdateTerminalMutation({});
-
-  const { data: ebl365Data, isLoading } = useGetAllEbl365Query(undefined, {
-    pollingInterval: 30000,
-    refetchOnMountOrArgChange: true,
-    refetchOnReconnect: true,
-  });
-
-  console.log("Ebl 365", ebl365Data);
 
   const onSubmit = async (data) => {
     const terminalData = {

@@ -1,5 +1,9 @@
-import { useCreateIssueFormMutation } from "@/redux/issueForm/issueFormApi";
+import {
+  useCreateIssueFormMutation,
+  useGetAllIssueFormQuery,
+} from "@/redux/issueForm/issueFormApi";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import LoadingScreen from "../Ui/LoadingScreen";
 
@@ -14,9 +18,17 @@ const DropIssueByAdmin = () => {
     formState: { errors },
   } = useForm();
 
+  const { data } = useGetAllIssueFormQuery(undefined, {
+    pollingInterval: 30000,
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true,
+  });
+
+  const issueAllData = data?.data;
+
   const onSubmit = async (data) => {
     const issueData = {
-      boothManagement: boothManagementId,
+      boothManagement: data.boothManagement,
       machineProblem: data.machineProblem,
       acProblem: data.acProblem,
       lightProblem: data.lightProblem,
@@ -33,7 +45,6 @@ const DropIssueByAdmin = () => {
     };
 
     const response = await createIssue(issueData);
-
     if (response?.data?.statusCode === 200) {
       toast.success("Created successfully");
     } else if (response?.data?.statusCode === 400) {
@@ -49,11 +60,32 @@ const DropIssueByAdmin = () => {
 
   return (
     <div>
-      {" "}
       <div className="container py-4 mx-auto max-w-2xl">
         <h1 className="text-3xl font-semibold text-primary">Create Issue</h1>
 
         <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="form-control mb-3">
+            <label className="label">
+              <span className="label-text">Select Your Booth</span>
+            </label>
+            <select
+              {...register("boothManagement", {
+                required: "EBL 365 is required",
+              })}
+              className="select select-bordered select-primary w-full"
+            >
+              <option value="">Select EBL 365 Booth</option>
+              {issueAllData &&
+                issueAllData.map((issue) => (
+                  <option key={issue.id} value={issue.boothManagement._id}>
+                    {issue.boothManagement.ebl365.ebl365Name}
+                  </option>
+                ))}
+            </select>
+            {errors.boothManagement && (
+              <p className="text-red-500">{errors.ebl365.message}</p>
+            )}
+          </div>
           <div className="mb-4">
             <label
               htmlFor="employeeCardNumber"

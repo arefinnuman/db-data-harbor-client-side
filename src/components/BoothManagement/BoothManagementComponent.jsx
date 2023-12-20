@@ -143,7 +143,7 @@ const BoothManagementComponent = () => {
                   ].map((header) => (
                     <th
                       key={header}
-                      className="py-2 px-4 text-left font-semibold border-b border-blue-300"
+                      className="py-2 px-4 font-semibold border-b border-blue-300 text-center"
                     >
                       {header}
                     </th>
