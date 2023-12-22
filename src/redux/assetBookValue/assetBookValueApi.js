@@ -20,7 +20,7 @@ const assetBookValueApi = apiSlice.injectEndpoints({
     }),
 
     updateAssetBookValue: builder.mutation({
-      query: ({ assetBookValueData }) => ({
+      query: (assetBookValueData) => ({
         url: `/asset-book-value/${assetBookValueData.id}`,
         method: "PATCH",
         body: assetBookValueData,
