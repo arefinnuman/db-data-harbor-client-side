@@ -39,6 +39,10 @@ const assetBookValueApi = apiSlice.injectEndpoints({
     getAssetBookValueByTerminal: builder.query({
       query: (id) => `/asset-book-value/terminal/${id}`,
     }),
+
+    getUnAssignedTerminalsInAssetBookValue: builder.query({
+      query: () => "/asset-book-value/unassigned-terminals",
+    }),
   }),
 });
 
@@ -49,4 +53,5 @@ export const {
   useUpdateAssetBookValueMutation,
   useDeleteAssetBookValueMutation,
   useGetAssetBookValueByTerminalQuery,
+  useGetUnAssignedTerminalsInAssetBookValueQuery,
 } = assetBookValueApi;

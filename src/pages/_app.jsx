@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
 import store from "@/redux/store";
 import "@/styles/globals.css";
 import { Poppins } from "next/font/google";

@@ -1,7 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   useCreateBoothManagementMutation,
   useGetUnassignedBoothForBoothManagementQuery,
 } from "@/redux/boothManagement/bothManagementApi";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -9,6 +11,7 @@ const CreateBoothManagementForm = () => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { isSubmitting, errors },
   } = useForm();
 
@@ -39,6 +42,9 @@ const CreateBoothManagementForm = () => {
     }
   };
 
+  const [selectedBoothId, setSelectedBoothId] = useState("");
+  const [numberOfMachines, setNumberOfMachines] = useState("");
+
   const { data: unAssignedEbl365 } =
     useGetUnassignedBoothForBoothManagementQuery(undefined, {
       pollingInterval: 30000,
@@ -47,7 +53,25 @@ const CreateBoothManagementForm = () => {
     });
 
   const unAssignedEbl365Data = unAssignedEbl365?.data;
+  console.log("unAssignedEbl365Data", unAssignedEbl365Data);
 
+  const handleSelectChange = (event) => {
+    const selectedId = event.target.value;
+    setSelectedBoothId(selectedId);
+
+    const selectedBooth = unAssignedEbl365Data.find(
+      (booth) => booth.id === selectedId
+    );
+    if (selectedBooth) {
+      setNumberOfMachines(selectedBooth.numberOfMachines);
+    } else {
+      setNumberOfMachines("");
+    }
+  };
+
+  useEffect(() => {
+    setValue("numberOfMachine", numberOfMachines);
+  }, [numberOfMachines, setValue]);
   return (
     <div>
       <h1 className="text-xl font-bold mb-2 text-primary">
@@ -65,6 +89,7 @@ const CreateBoothManagementForm = () => {
             <select
               {...register("ebl365", { required: "EBL 365 is required" })}
               className="select select-bordered select-primary w-full"
+              onChange={handleSelectChange}
             >
               <option value="">Select EBL 365 Booth</option>
               {unAssignedEbl365Data &&
@@ -84,12 +109,12 @@ const CreateBoothManagementForm = () => {
               <span className="label-text">Number of machine</span>
             </label>
             <input
-              {...register("numberOfMachine", {
-                required: "Number of machine is required",
-              })}
+              {...register("numberOfMachine")}
               type="number"
-              placeholder="Number of machine"
+              placeholder="This field will be auto filled after selecting Booth"
               className="input input-bordered input-primary w-full"
+              value={numberOfMachines}
+              readOnly={true}
             />
             {errors.numberOfMachine && (
               <p className="text-red-500">{errors.numberOfMachine.message}</p>

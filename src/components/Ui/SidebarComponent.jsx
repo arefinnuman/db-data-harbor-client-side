@@ -13,6 +13,7 @@ function SidebarComponent() {
     { href: "/booth-acquisition", label: "Booth Acquisition", Icon: FaCube },
     { href: "/booth-management", label: "Booth Management", Icon: FaTasks },
     { href: "/issue-form", label: "Issue Form", Icon: FaWpforms },
+    { href: "/asset-book-value", label: "Asset Book Value", Icon: FaWpforms },
   ];
 
   return (

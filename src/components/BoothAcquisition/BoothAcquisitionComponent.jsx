@@ -100,8 +100,8 @@ const BoothAcquisitionComponent = () => {
       {isLoading ? (
         <LoadingScreen />
       ) : (
-        <section className="p-6">
-          <div className="flex justify-between items-center my-3">
+        <section className="px-6">
+          <div className="flex justify-between items-center my-2">
             {user?.role === "admin" || user?.role === "super_admin" ? (
               <div>
                 <Link
