@@ -60,13 +60,13 @@ const AssetBookValueComponent = () => {
 
   const unAssignedTerminalsData = unAssignedTerminals?.data;
 
-  const hasUnassignedBooths =
+  const hasUnassignedTerminals =
     unAssignedTerminalsData && unAssignedTerminalsData.length > 0;
 
-  const renderUnassignedBooths = () => {
-    return unAssignedTerminalsData.map((booth, index) => (
-      <li key={booth.id}>
-        {booth.ebl365Name}
+  const renderUnassignedTerminals = () => {
+    return unAssignedTerminalsData.map((terminal, index) => (
+      <li key={terminal.id}>
+        {terminal.terminalNameAndId}
         {index < unAssignedTerminalsData.length - 1 ? "" : ""}
       </li>
     ));
@@ -182,7 +182,7 @@ const AssetBookValueComponent = () => {
 
                     <td className="py-2 px-4">
                       <Link
-                        href={`/booth-management/${assetBookValue._id}`}
+                        href={`/asset-book-value/${assetBookValue._id}`}
                         className="flex items-center text-gray-500 hover:text-blue-500 transition-all duration-300 transform hover:scale-105"
                       >
                         <span className="mr-2 border-b border-transparent hover:border-black hover:shadow-md">
@@ -258,22 +258,22 @@ const AssetBookValueComponent = () => {
             />
           )}
 
-          {/* {hasUnassignedBooths && (
+          {hasUnassignedTerminals && (
             <div className="mt-5">
               <div className="p-4 mb-4 rounded-lg bg-yellow-100 border-yellow-400 border-l-4">
                 <h5 className="text-yellow-800 text-lg font-semibold mb-2">
-                  Attention: Unassigned Booths
+                  Attention: Unassigned Terminals
                 </h5>
                 <p className="text-yellow-700 mb-3">
-                  The following booths are currently unassigned. Please assign
-                  them soon:
+                  The following terminals are currently unassigned. Please
+                  assign them soon:
                 </p>
                 <ul className="list-disc list-inside pl-5">
-                  {renderUnassignedBooths()}
+                  {renderUnassignedTerminals()}
                 </ul>
               </div>
             </div>
-          )} */}
+          )}
         </section>
       )}
     </>
