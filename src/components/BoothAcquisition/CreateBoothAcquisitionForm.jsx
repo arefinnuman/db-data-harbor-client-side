@@ -1,5 +1,7 @@
-import { useCreateBoothAcquisitionMutation } from "@/redux/boothAcquisition/boothAcquisitionApi";
-import { useGetUnassignedBoothForBoothManagementQuery } from "@/redux/boothManagement/bothManagementApi";
+import {
+  useCreateBoothAcquisitionMutation,
+  useGetUnassignedBoothForAcquisitionQuery,
+} from "@/redux/boothAcquisition/boothAcquisitionApi";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -44,12 +46,14 @@ const CreateBoothAcquisitionForm = () => {
     }
   };
 
-  const { data: unAssignedEbl365 } =
-    useGetUnassignedBoothForBoothManagementQuery(undefined, {
+  const { data: unAssignedEbl365 } = useGetUnassignedBoothForAcquisitionQuery(
+    undefined,
+    {
       pollingInterval: 30000,
       refetchOnMountOrArgChange: true,
       refetchOnReconnect: true,
-    });
+    }
+  );
 
   const unAssignedEbl365Data = unAssignedEbl365?.data;
 

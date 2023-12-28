@@ -18,14 +18,6 @@ function SidebarComponent() {
 
   return (
     <div className="relative">
-      <button
-        className="lg:hidden p-4"
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label="Toggle Sidebar"
-      >
-        ☰
-      </button>
-
       <aside
         className={`bg-white shadow-lg transform top-0 left-0 w-64 min-h-screen fixed lg:relative transition-transform duration-200 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-full"

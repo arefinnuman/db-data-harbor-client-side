@@ -27,6 +27,7 @@ const IssueFormComponent = () => {
   });
 
   const issueFormData = allIssues?.data;
+  console.log(issueFormData);
 
   const [solvedIssue] = useUpdateIssueToResolveMutation();
   const [pendingIssue] = useUpdateIssueToPendingMutation();

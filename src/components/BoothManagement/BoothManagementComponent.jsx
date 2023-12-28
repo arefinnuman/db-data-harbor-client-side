@@ -159,10 +159,10 @@ const BoothManagementComponent = () => {
                     } hover:bg-blue-50 transition duration-150`}
                   >
                     <td className="py-2 px-4">
-                      {boothManagement.ebl365.ebl365Name}
+                      {boothManagement.ebl365?.ebl365Name}
                     </td>
                     <td className="py-2 px-4">
-                      {boothManagement.ebl365.ebl365Address}
+                      {boothManagement.ebl365?.ebl365Address}
                     </td>
                     <td className="py-2 px-4">{boothManagement.numberOfAc}</td>
                     <td className="py-2 px-4">
@@ -188,7 +188,7 @@ const BoothManagementComponent = () => {
                     </td>
                     <td className="py-2 px-4 ">
                       <Link
-                        href={`/issue-form/drop-an-issue/${boothManagement.ebl365._id}`}
+                        href={`/issue-form/drop-an-issue/${boothManagement.ebl365?._id}`}
                         className="flex items-center text-gray-500 hover:text-blue-500 transition-all duration-300 transform hover:scale-105"
                       >
                         <span className="mr-2 border-b border-transparent hover:border-black hover:shadow-md">

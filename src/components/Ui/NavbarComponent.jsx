@@ -34,6 +34,15 @@ const NavbarComponent = () => {
     }, 1000);
   };
 
+  const menuItems = {
+    "Ebl 365": "/ebl-365",
+    Terminals: "/terminals",
+    "Booth Acquisition": "/booth-acquisition",
+    "Booth Management": "/booth-management",
+    "Issue Form": "/issue-form",
+    "Asset Book Value": "/asset-book-value",
+  };
+
   return (
     <div>
       {loading ? (
@@ -62,7 +71,9 @@ const NavbarComponent = () => {
                 <ul
                   tabIndex={0}
                   className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-                ></ul>
+                >
+                  Hello
+                </ul>
               </div>
               <Link href="/">
                 <Image src={logo} alt="logo" width={200} height={100} />

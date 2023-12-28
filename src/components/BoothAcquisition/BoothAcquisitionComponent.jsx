@@ -26,6 +26,7 @@ const BoothAcquisitionComponent = () => {
   });
 
   const boothAcquisitionData = boothAcquisitionAllData?.data;
+  console.log("boothAcquisitionData", boothAcquisitionData);
 
   function DownloadLink({ url }) {
     return (
@@ -95,6 +96,27 @@ const BoothAcquisitionComponent = () => {
     ));
   };
 
+  // landOwnerName: 'John Doe',
+  //     landOwnerAddress: '123 Elm Street, Springfield',
+  //     landOwnerPhone: '+1-123-456-7890',
+  //     boothLocation: 'East Wing, Springfield Mall etc a1',
+  //     boothType: 'Food Stall',
+  //     boothStartDate: '2021-10-01T00:00:00.000Z',
+  //     boothExpiryDate: '2027-10-01T00:00:00.000Z',
+  //     boothContractYear: 6,
+  //     boothContractMonth: 72,
+  //     boothMonthlyRent: 24000,
+  //     boothSize: 100,
+  //     boothPerSqftRent: 240,
+  //     totalBoothRent: 1728000,
+  //     advancePaymentPercentage: 20,
+  //     totalAdvancePayment: 345600,
+  //     monthlyAdvancePayment: 5760,
+  //     monthlyRentAfterAdvancePayment: 18240,
+  //     monthlyRentAfterThreeYears: 20976,
+  //     monthlyRentAfterFiveYears: 26736,
+  //     currentMonthlyRent: 18240,
+
   return (
     <>
       {isLoading ? (
@@ -146,10 +168,15 @@ const BoothAcquisitionComponent = () => {
                     "Name",
                     "Address",
                     "Owner Name",
+                    "Adv. Payment %",
+                    "Contract Year",
+                    "Booth Start Date",
+                    "Booth Expiry Date",
                     "Monthly Rent",
                     "Size",
-                    "Contact Year",
-                    "Expiry Date",
+                    "Total Rent",
+                    "Current Monthly Rent",
+                    "Type",
                     "Board Memo",
                     "Agreement Paper",
                     "Details",
@@ -186,15 +213,33 @@ const BoothAcquisitionComponent = () => {
                       {boothAcquisition.landOwnerName}
                     </td>
                     <td className="py-2 px-4">
-                      {boothAcquisition.boothMonthlyRent}
+                      {boothAcquisition.advancePaymentPercentage}
                     </td>
-                    <td className="py-2 px-4">{boothAcquisition.boothSize}</td>
-                    <td className="py-2 px-4">{boothAcquisition.boothType}</td>
+                    <td className="py-2 px-4">
+                      {boothAcquisition.boothContractYear}
+                    </td>
+                    <td className="py-2 px-4">
+                      {new Date(
+                        boothAcquisition.boothStartDate
+                      ).toLocaleDateString()}
+                    </td>
                     <td className="py-2 px-4">
                       {new Date(
                         boothAcquisition.boothExpiryDate
                       ).toLocaleDateString()}
                     </td>
+                    <td className="py-2 px-4">
+                      {boothAcquisition.boothMonthlyRent}
+                    </td>
+                    <td className="py-2 px-4">{boothAcquisition.boothSize}</td>
+                    <td className="py-2 px-4">
+                      {boothAcquisition.totalBoothRent}
+                    </td>
+                    <td className="py-2 px-4">
+                      {boothAcquisition.currentMonthlyRent}
+                    </td>
+                    <td className="py-2 px-4">{boothAcquisition.boothType}</td>
+
                     <td className="py-2 px-4">
                       <div className="p-4">
                         <DownloadLink

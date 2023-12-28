@@ -258,6 +258,12 @@ const AssetBookValueComponent = () => {
             />
           )}
 
+          <div className="my-6">
+            <h2 className="text-2xl  font-semibold text-gray-600">
+              Generate Book Value Report
+            </h2>
+          </div>
+
           {hasUnassignedTerminals && (
             <div className="mt-5">
               <div className="p-4 mb-4 rounded-lg bg-yellow-100 border-yellow-400 border-l-4">
