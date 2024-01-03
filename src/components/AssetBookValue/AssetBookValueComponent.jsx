@@ -12,6 +12,7 @@ import { FaPlus } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import DeleteConfirmationModal from "../Ui/DeleteConfirmationModal";
 import LoadingScreen from "../Ui/LoadingScreen";
+import GenerateBookValueReport from "./GenerateBookValueReport";
 import UpdateAssetBookValueForm from "./UpdateAssetBookValueForm";
 
 const AssetBookValueComponent = () => {
@@ -258,10 +259,8 @@ const AssetBookValueComponent = () => {
             />
           )}
 
-          <div className="my-6">
-            <h2 className="text-2xl  font-semibold text-gray-600">
-              Generate Book Value Report
-            </h2>
+          <div>
+            <GenerateBookValueReport />
           </div>
 
           {hasUnassignedTerminals && (

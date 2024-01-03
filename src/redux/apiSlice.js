@@ -22,6 +22,7 @@ export const apiSlice = createApi({
     "users",
     "boothmanagements",
     "assetBookValue",
+    "bookValueReports",
   ],
 
   endpoints: () => ({}),
