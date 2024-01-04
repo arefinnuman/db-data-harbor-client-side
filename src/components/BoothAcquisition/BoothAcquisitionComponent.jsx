@@ -26,7 +26,6 @@ const BoothAcquisitionComponent = () => {
   });
 
   const boothAcquisitionData = boothAcquisitionAllData?.data;
-  console.log("boothAcquisitionData", boothAcquisitionData);
 
   function DownloadLink({ url }) {
     return (

@@ -53,7 +53,6 @@ const CreateBoothManagementForm = () => {
     });
 
   const unAssignedEbl365Data = unAssignedEbl365?.data;
-  console.log("unAssignedEbl365Data", unAssignedEbl365Data);
 
   const handleSelectChange = (event) => {
     const selectedId = event.target.value;

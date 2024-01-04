@@ -75,7 +75,6 @@ const SingleBookValueReport = () => {
       assetAmcRemaining,
       totalCostOwnerShip,
     } = responseData;
-    console.log("responseData", responseData);
 
     if (!assetBookValue || !assetBookValue.terminal) {
       console.error("Asset book value data is missing or incomplete");
@@ -132,7 +131,7 @@ const SingleBookValueReport = () => {
 
     try {
       const response = await createBookValueReport(bookValueData);
-      console.log("response", response);
+
       if (response?.data?.statusCode === 200) {
         generateExcel(response.data.data);
       } else {

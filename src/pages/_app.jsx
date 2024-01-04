@@ -4,6 +4,7 @@ import { Poppins } from "next/font/google";
 import Head from "next/head";
 import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
+import Modal from "react-modal";
 import { Provider, useSelector } from "react-redux";
 
 const poppins = Poppins({
@@ -24,6 +25,10 @@ function InitUser({ children }) {
 
 export default function App({ Component, pageProps }) {
   const getLayout = Component.getLayout || ((page) => page);
+
+  useEffect(() => {
+    Modal.setAppElement(document.body);
+  }, []);
 
   return (
     <>
