@@ -1,15 +1,15 @@
-import dbDataHarborLogo from "@/assets/DB-Data-Harbor.png";
 import {
   useDeleteEbl365Mutation,
   useGetAllEbl365Query,
 } from "@/redux/ebl365/ebl365Api";
-import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { default as DataTable } from "react-data-table-component";
 import toast from "react-hot-toast";
-import { FaPlus } from "react-icons/fa";
+import { FaFileExcel, FaPlus, FaSearch } from "react-icons/fa";
+import Modal from "react-modal";
 import { useSelector } from "react-redux";
-import DeleteConfirmationModal from "../Ui/DeleteConfirmationModal";
+import * as XLSX from "xlsx";
 import LoadingScreen from "../Ui/LoadingScreen";
 import Update365Form from "./Update365Form";
 
@@ -21,8 +21,6 @@ export default function Ebl365Components() {
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true,
   });
-
-  const ebl365Data = data?.data;
 
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [ebl365ToDelete, setEbl365ToDelete] = useState(null);
@@ -50,163 +48,292 @@ export default function Ebl365Components() {
     setShowDeleteConfirmation(true);
   };
 
+  const columns = [
+    { name: "Name", selector: (row) => row.ebl365Name, sortable: true },
+    { name: "Address", selector: (row) => row.ebl365Address, sortable: true },
+    { name: "Type", selector: (row) => row.ebl365StatusType, sortable: true },
+    { name: "Zone", selector: (row) => row.ebl365Zone, sortable: true },
+    { name: "Devices", selector: (row) => row.boothDevices, sortable: true },
+    {
+      name: "Total",
+      selector: (row) => row.noOfAvailableMachine,
+      sortable: true,
+    },
+    {
+      name: "Active",
+      selector: (row) => row.noOfRunningMachine,
+      sortable: true,
+    },
+    {
+      name: "Details",
+      cell: (row) => (
+        <Link
+          href={`/ebl-365/${row._id}`}
+          className="flex items-center text-gray-500 hover:text-blue-500 transition-all duration-300 transform hover:scale-105"
+        >
+          <span className="mr-2 border-b border-transparent hover:border-black hover:shadow-md">
+            Details
+          </span>
+        </Link>
+      ),
+    },
+    ...(user?.role === "admin" || user?.role === "super_admin"
+      ? [
+          {
+            name: "Edit",
+            cell: (row) => (
+              <button
+                onClick={() => setSelectedUpdateBooth(row)}
+                className="text-blue-500 hover:bg-blue-100 p-2 rounded transition-all duration-300 transform hover:scale-105"
+              >
+                <span className="mr-2 border-b border-transparent hover:border-blue-500 hover:shadow-md">
+                  Edit
+                </span>
+              </button>
+            ),
+          },
+          {
+            name: "Delete",
+            cell: (row) => (
+              <button
+                onClick={() => handleDeleteButtonClick(row._id)}
+                className="text-red-500 hover:bg-red-100 p-2 rounded transition-all duration-300 transform hover:scale-105"
+              >
+                <span className="mr-2 border-b border-transparent hover:border-red-500 hover:shadow-md">
+                  Delete
+                </span>
+              </button>
+            ),
+          },
+        ]
+      : []),
+  ];
+
+  const customStyles = {
+    headCells: {
+      style: {
+        backgroundColor: "#2C3E50",
+        color: "#ffffff",
+        fontSize: "1rem",
+        padding: "15px",
+        textTransform: "uppercase",
+      },
+    },
+    rows: {
+      style: {
+        fontSize: "1rem",
+        cursor: "pointer",
+        height: "60px",
+        borderBottom: "1px solid #dfe6e9",
+      },
+      highlightOnHoverStyle: {
+        backgroundColor: "#f2f2f2",
+      },
+    },
+    pagination: {
+      style: {
+        fontSize: "1rem",
+        padding: "10px",
+      },
+      pageButtonsStyle: {
+        fontSize: "1rem",
+        color: "#3498db",
+      },
+    },
+  };
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
+
+  useEffect(() => {
+    const results = data?.data?.filter((item) =>
+      Object.values(item).some(
+        (value) =>
+          value &&
+          value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+    setFilteredData(results);
+  }, [searchTerm, data?.data]);
+
+  const [selectedRows, setSelectedRows] = useState([]);
+
+  const handleRowSelected = (rows) => {
+    setSelectedRows(rows.selectedRows);
+  };
+
+  const exportToExcel = () => {
+    if (selectedRows.length === 0) {
+      toast.error("Please select at least one row to export");
+      return;
+    }
+
+    const selectedDataToExport = filteredData
+      .filter((row) =>
+        selectedRows.find((selectedRow) => selectedRow.index === row.index)
+      )
+      .map((row) => ({
+        "EBL 365 Name": row.ebl365Name,
+        "EBL 365 Address": row.ebl365Address,
+        "EBL 365 Zone": row.ebl365Zone,
+        "EBL 365 Name in Bengali": row.ebl365NameInBengali,
+        "EBL 365 Status Type": row.ebl365StatusType,
+        "Location Type": row.locationType,
+        "Area Type": row.areaType,
+        "Area Name": row.areaName,
+        "Geo Latitude": row.geoLatitude,
+        "Geo Longitude": row.geoLongitude,
+        "Branch Controlling GL": row.branchControllingGl,
+        "Division ": row.division,
+        "Postal Code": row.postalCOde,
+        "Nearest Famous Place": row.nearestFamousPlace,
+        "Division ID": row.divisionId,
+        "District ID": row.districtId,
+        "Upazila or Thana": row.upazilaOrThana,
+        "Controlled By": row.controlledBy,
+        "Booth Devices": row.boothDevices,
+        "No of Available Machines": row.noOfAvailableMachine,
+        "No of Running Machines": row.noOfRunningMachine,
+        "Available Machines Details": row.machines
+          .map((machine) => machine.terminalNameAndId)
+          .join(", "),
+      }));
+
+    const worksheet = XLSX.utils.json_to_sheet(selectedDataToExport, {
+      header: Object.keys(selectedDataToExport[0]),
+    });
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet 1");
+
+    const fileName = "selected-rows-export.xlsx";
+
+    XLSX.writeFile(workbook, fileName);
+  };
+
+  const subHeaderComponentDiv = () => {
+    return (
+      <div className="flex flex-col lg:flex-row items-center justify-between mb-2 w-full">
+        <div className="mb-2 lg:mb-0 lg:mr-2">
+          {user?.role === "admin" || user?.role === "super_admin" ? (
+            <div>
+              <Link
+                href="/ebl-365/create"
+                className="flex items-center justify-center bg-blue-500 text-white py-2 px-4 rounded shadow hover:bg-blue-600 transition-colors"
+              >
+                <FaPlus className="mr-2" /> Create
+              </Link>
+            </div>
+          ) : null}
+        </div>
+        <div className="relative flex items-center mb-2 lg:mb-0">
+          <input
+            type="text"
+            placeholder="Search"
+            className="border px-3 py-2 pr-10 form-control rounded-md border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600">
+            <FaSearch />
+          </div>
+        </div>
+        <button
+          className="flex items-center justify-center bg-blue-500 text-white py-2 px-4 rounded shadow hover:bg-blue-600 transition-colors"
+          onClick={exportToExcel}
+        >
+          <FaFileExcel className="mr-1" />
+          Download Excel
+        </button>
+      </div>
+    );
+  };
+
   return (
     <>
       {isLoading ? (
         <LoadingScreen />
       ) : (
-        <section className="px-6">
-          <div className="flex justify-between items-center my-3">
-            {user?.role === "admin" || user?.role === "super_admin" ? (
-              <div>
-                <Link
-                  href="/ebl-365/create"
-                  className="flex items-center justify-center bg-blue-500 text-white py-2 px-4 rounded shadow hover:bg-blue-600 transition-colors"
-                >
-                  <FaPlus className="mr-2" /> Create
-                </Link>
-              </div>
-            ) : (
-              <div>
-                <h2 className="text-2xl font-semibold text-gray-600">
-                  EBL 365
-                </h2>
-              </div>
-            )}
-
-            {user?.role === "admin" ||
-              (user?.role === "super_admin" && (
-                <div>
-                  <h2 className="text-2xl font-semibold text-gray-600">
-                    EBL 365
-                  </h2>
-                </div>
-              ))}
-
-            <div>
-              <Image
-                src={dbDataHarborLogo}
-                alt="logo"
-                width={200}
-                height={100}
-              />
-            </div>
-          </div>
-
-          <div className="w-full max-w-6xl m-auto overflow-x-auto shadow-md rounded-xl">
-            <table className="w-full bg-white border">
-              <thead className="bg-blue-500 text-white">
-                <tr>
-                  {[
-                    "Name",
-                    "Address",
-                    "Type",
-                    "Zone",
-                    "Devices",
-                    "Total",
-                    "Active",
-                    "Details",
-                    ...(user?.role === "admin" || user?.role === "super_admin"
-                      ? ["Action"]
-                      : []),
-                  ].map((header) => (
-                    <th
-                      key={header}
-                      className={`py-2 px-4 font-semibold border-b border-blue-300 ${
-                        header === "Action" ? "text-center" : "text-left"
-                      }`}
-                    >
-                      {header}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-
-              <tbody>
-                {ebl365Data?.map((ebl365, index) => (
-                  <tr
-                    key={ebl365.id}
-                    className={`${
-                      index % 2 === 0 ? "bg-white" : "bg-white"
-                    } hover:bg-blue-50 transition duration-150`}
-                  >
-                    <td className="py-2 px-4">{ebl365.ebl365Name}</td>
-                    <td className="py-2 px-4">{ebl365.ebl365Address}</td>
-                    <td className="py-2 px-4">{ebl365.ebl365StatusType}</td>
-                    <td className="py-2 px-4">{ebl365.ebl365Zone}</td>
-                    <td className="py-2 px-4">{ebl365.boothDevices}</td>
-                    <td className="py-2 px-4">{ebl365.noOfAvailableMachine}</td>
-                    <td className="py-2 px-4">{ebl365.noOfRunningMachine}</td>
-                    <td className="py-2 px-4">
-                      <Link
-                        href={`/ebl-365/${ebl365._id}`}
-                        className="flex items-center text-gray-500 hover:text-blue-500 transition-all duration-300 transform hover:scale-105"
-                      >
-                        <span className="mr-2 border-b border-transparent hover:border-black hover:shadow-md">
-                          Details
-                        </span>
-                      </Link>
-                    </td>
-
-                    {(user?.role === "admin" ||
-                      user?.role === "super_admin") && (
-                      <td className="py-2 px-4 flex space-x-2">
-                        <button
-                          onClick={() => setSelectedUpdateBooth(ebl365)}
-                          className="flex items-center text-blue-500 hover:bg-blue-100 p-2 rounded transition-all duration-300 transform hover:scale-105"
-                        >
-                          <span className="mr-2 border-b border-transparent hover:border-blue-500 hover:shadow-md">
-                            Edit
-                          </span>
-                        </button>
-
-                        <button
-                          onClick={() => handleDeleteButtonClick(ebl365._id)}
-                          className="flex items-center text-red-500 hover:bg-red-100 p-2 rounded transition-all duration-300 transform hover:scale-105"
-                        >
-                          <span className="mr-2 border-b border-transparent hover:border-red-500 hover:shadow-md">
-                            Delete
-                          </span>
-                        </button>
-                      </td>
-                    )}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <section className="md:px-5">
+          <div className="w-full  m-auto overflow-x-auto shadow-md rounded-xl">
+            <DataTable
+              title="EBL 365"
+              columns={columns}
+              data={filteredData || []}
+              pagination
+              selectableRows
+              selectableRowsHighlight
+              onSelectedRowsChange={handleRowSelected}
+              highlightOnHover
+              defaultSortField="Name"
+              noDataComponent={<div className="p-4">No data available</div>}
+              customStyles={customStyles}
+              paginationPerPage={10}
+              paginationRowsPerPageOptions={[10, 20, 30, 40, 50]}
+              paginationComponentOptions={{
+                rowsPerPageText: "Rows per page:",
+                rangeSeparatorText: "of",
+              }}
+              striped
+              responsive
+              paginationServer
+              searchable={true}
+              searchPlaceholder="Search"
+              subHeader
+              subHeaderComponent={subHeaderComponentDiv()}
+              subHeaderAlign="center"
+              actions
+            />
           </div>
 
           {selectedUpdateBooth && (
-            <dialog
-              id="my_modal_2"
-              className="modal modal-bottom sm:modal-middle "
-              open
+            <Modal
+              isOpen={true}
+              onRequestClose={() => setSelectedUpdateBooth(null)}
+              className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border border-primary shadow-2xl p-4 sm:p-6 md:p-8 bg-white rounded-lg w-full sm:w-auto sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg"
             >
-              <section
-                method="dialog"
-                className="modal-box border border-primary shadow-2xl"
+              <button
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none"
+                onClick={() => setSelectedUpdateBooth(null)}
               >
+                Close
+              </button>
+              <div style={{ maxHeight: "90vh" }} className="overflow-y-auto">
                 <Update365Form selectedUpdateBooth={selectedUpdateBooth} />
-                <div className="modal-action text-center flex justify-center">
-                  <button
-                    className="btn btn-sm btn-outline "
-                    onClick={() => setSelectedUpdateBooth(null)}
-                  >
-                    Close
-                  </button>
-                </div>
-              </section>
-            </dialog>
+              </div>
+            </Modal>
           )}
 
           {showDeleteConfirmation && (
-            <DeleteConfirmationModal
-              onConfirm={() => {
-                handleDelete365Booth(ebl365ToDelete);
-                setShowDeleteConfirmation(false);
-              }}
-              onCancel={() => setShowDeleteConfirmation(false)}
-            />
+            <Modal
+              isOpen={true}
+              onRequestClose={() => setShowDeleteConfirmation(false)}
+              className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 modal-box shadow-2xl"
+            >
+              <div className="p-4">
+                <p className="text-xl font-bold mb-4">Delete Confirmation</p>
+                <p className="mb-4">
+                  Are you sure you want to delete this item?
+                </p>
+                <div className="flex justify-end">
+                  <button
+                    className="btn btn-sm btn-danger mr-2"
+                    onClick={() => {
+                      handleDelete365Booth(ebl365ToDelete);
+                      setShowDeleteConfirmation(false);
+                    }}
+                  >
+                    Confirm
+                  </button>
+                  <button
+                    className="btn btn-sm btn-outline"
+                    onClick={() => setShowDeleteConfirmation(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </Modal>
           )}
         </section>
       )}
