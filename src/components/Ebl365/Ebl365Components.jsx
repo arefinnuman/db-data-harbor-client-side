@@ -162,15 +162,34 @@ export default function Ebl365Components() {
     setSelectedRows(rows.selectedRows);
   };
 
-  const exportToExcel = () => {
+  const [dataForExcel, setDataForExcel] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedFields, setSelectedFields] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+
+  useEffect(() => {
+    if (selectAll) {
+      setSelectedFields(Object.keys(dataForExcel[0]));
+    } else {
+      setSelectedFields([]);
+    }
+  }, [selectAll, dataForExcel]);
+
+  const toggleSelectAll = () => {
+    setSelectAll((prevSelectAll) => !prevSelectAll);
+  };
+
+  const openModal = () => {
     if (selectedRows.length === 0) {
       toast.error("Please select at least one row to export");
       return;
     }
 
+    setIsModalOpen(true);
+
     const selectedDataToExport = filteredData
       .filter((row) =>
-        selectedRows.find((selectedRow) => selectedRow.index === row.index)
+        selectedRows.some((selectedRow) => selectedRow.id === row.id)
       )
       .map((row) => ({
         "EBL 365 Name": row.ebl365Name,
@@ -199,8 +218,43 @@ export default function Ebl365Components() {
           .join(", "),
       }));
 
-    const worksheet = XLSX.utils.json_to_sheet(selectedDataToExport, {
-      header: Object.keys(selectedDataToExport[0]),
+    console.log("selectedDataToExport", selectedDataToExport);
+    setDataForExcel(selectedDataToExport);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCheckboxChange = (field) => {
+    setSelectedFields((prevSelectedFields) => {
+      if (prevSelectedFields.includes(field)) {
+        return prevSelectedFields.filter(
+          (selectedField) => selectedField !== field
+        );
+      } else {
+        return [...prevSelectedFields, field];
+      }
+    });
+  };
+
+  const handleDownload = () => {
+    closeModal();
+
+    const dataToExport = dataForExcel.map((row) =>
+      selectedFields.reduce((acc, field) => {
+        if (row[field] !== undefined) acc[field] = row[field];
+        return acc;
+      }, {})
+    );
+
+    const headers =
+      selectedFields.length > 0
+        ? selectedFields
+        : Object.keys(dataForExcel[0] || {});
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport, {
+      header: headers,
     });
 
     const workbook = XLSX.utils.book_new();
@@ -209,6 +263,8 @@ export default function Ebl365Components() {
     const fileName = "selected-rows-export.xlsx";
 
     XLSX.writeFile(workbook, fileName);
+
+    toast.success("Downloaded Successfully");
   };
 
   const subHeaderComponentDiv = () => {
@@ -240,7 +296,7 @@ export default function Ebl365Components() {
         </div>
         <button
           className="flex items-center justify-center bg-blue-500 text-white py-2 px-4 rounded shadow hover:bg-blue-600 transition-colors"
-          onClick={exportToExcel}
+          onClick={openModal}
         >
           <FaFileExcel className="mr-1" />
           Download Excel
@@ -255,7 +311,7 @@ export default function Ebl365Components() {
         <LoadingScreen />
       ) : (
         <section className="md:px-5">
-          <div className="w-full  m-auto overflow-x-auto shadow-md rounded-xl">
+          <div className="w-full  m-auto overflow-x-auto  shadow-bottom shadow-md ">
             <DataTable
               title="EBL 365"
               columns={columns}
@@ -285,6 +341,70 @@ export default function Ebl365Components() {
               actions
             />
           </div>
+
+          <Modal
+            isOpen={isModalOpen}
+            onRequestClose={closeModal}
+            contentLabel="Select Fields Modal"
+            style={{
+              overlay: {
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                zIndex: "1000",
+              },
+              content: {
+                width: "90%",
+                maxWidth: "600px",
+                margin: "auto",
+                borderRadius: "8px",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                padding: "20px",
+                backgroundColor: "white",
+              },
+            }}
+          >
+            <h2 className="text-3xl font-bold mb-6">Select Fields</h2>
+            <div className="mb-4">
+              <label className="flex items-center text-lg">
+                <input
+                  type="checkbox"
+                  checked={selectAll}
+                  onChange={toggleSelectAll}
+                  className="mr-3"
+                />
+                Select All
+              </label>
+            </div>
+            <div className="flex flex-wrap">
+              {dataForExcel.length > 0 &&
+                Object.keys(dataForExcel[0]).map((field) => (
+                  <div key={field} className="w-1/2 mb-4">
+                    <label className="flex items-center text-lg">
+                      <input
+                        type="checkbox"
+                        checked={selectedFields.includes(field)}
+                        onChange={() => handleCheckboxChange(field)}
+                        className="mr-3"
+                      />
+                      {field}
+                    </label>
+                  </div>
+                ))}
+            </div>
+            <div className="flex justify-end mt-8">
+              <button
+                onClick={handleDownload}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 mr-4 rounded-md focus:outline-none focus:shadow-outline-blu"
+              >
+                Download
+              </button>
+              <button
+                onClick={closeModal}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-6 rounded-md focus:outline-none focus:shadow-outline-gray active:bg-gray-400"
+              >
+                Close
+              </button>
+            </div>
+          </Modal>
 
           {selectedUpdateBooth && (
             <Modal
