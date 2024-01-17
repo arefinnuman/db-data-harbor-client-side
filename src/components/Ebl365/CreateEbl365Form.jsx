@@ -48,11 +48,12 @@ const CreateEbl365Form = () => {
   };
 
   return (
-    <div>
+    <div className="">
       <form
         className="w-full max-w-md mx-auto p-4 shadow-lg rounded-lg bg-white"
         onSubmit={handleSubmit(onSubmit)}
       >
+        <div className="grid grid-cols-2 gap-4"></div>
         <div className="form-control mb-3">
           <label className="label">
             <span className="label-text">Name</span>

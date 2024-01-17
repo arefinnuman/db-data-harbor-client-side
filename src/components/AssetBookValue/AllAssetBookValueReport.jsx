@@ -1,8 +1,10 @@
 import { useCreateAllBookValueReportMutation } from "@/redux/bookValueReport/bookvValueReport";
 import FileSaver from "file-saver";
+import Papa from "papaparse";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { MdFileDownload, MdInsertDriveFile } from "react-icons/md";
 import Modal from "react-modal";
 import * as XLSX from "xlsx";
 
@@ -160,7 +162,7 @@ const AllAssetBookValueReport = () => {
     });
   };
 
-  const handleDownload = () => {
+  const downloadExcel = () => {
     closeModal();
 
     const filteredDataForExcel =
@@ -190,6 +192,34 @@ const AllAssetBookValueReport = () => {
     toast.success("Downloaded Successfully");
   };
 
+  const downloadCSV = () => {
+    closeModal();
+
+    const filteredDataForCSV =
+      dataForExcel.length > 0
+        ? dataForExcel.map((item) => {
+            const filteredItem = {};
+            for (const field of selectedFields) {
+              filteredItem[field] = item[field];
+            }
+            return filteredItem;
+          })
+        : [];
+
+    const csv = Papa.unparse(filteredDataForCSV, {
+      header: true,
+      delimiter: ",",
+    });
+
+    const dataBlob = new Blob([csv], {
+      type: "text/csv;charset=utf-8",
+    });
+
+    FileSaver.saveAs(dataBlob, "BookValueReport.csv");
+
+    toast.success("CSV Downloaded Successfully");
+  };
+
   const isDownloadDisabled = selectedFields.length === 0;
 
   return (
@@ -199,7 +229,9 @@ const AllAssetBookValueReport = () => {
           className="w-full max-w-md mx-auto p-4 shadow-lg rounded-lg bg-white"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <h1 className="text-xl text-bold my-2">All Book Value Report</h1>
+          <h1 className="text-xl text-bold my-2">
+            Generate All Book Value Report
+          </h1>
           <div className="form-control mb-3">
             <label className="label">
               <span className="label-text">Reporting Date</span>
@@ -275,14 +307,27 @@ const AllAssetBookValueReport = () => {
           </div>
           <div className="flex justify-end mt-8">
             <button
-              onClick={handleDownload}
-              className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 mr-4 rounded-md focus:outline-none focus:shadow-outline-blue ${
+              onClick={downloadExcel}
+              className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 mr-4 rounded-md focus:outline-none focus:shadow-outline-blue shadow-md transition duration-200 ease-in-out transform hover:scale-105 ${
                 isDownloadDisabled && "opacity-50 cursor-not-allowed"
               } active:bg-blue-800`}
               disabled={isDownloadDisabled}
             >
-              Download
+              <MdFileDownload className="inline-block mr-2 text-xl" /> Download
+              Excel
             </button>
+
+            <button
+              onClick={downloadCSV}
+              className={`bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 mr-4 rounded-md focus:outline-none focus:shadow-outline-green shadow-md transition duration-200 ease-in-out transform hover:scale-105 ${
+                isDownloadDisabled && "opacity-50 cursor-not-allowed"
+              } active:bg-green-800`}
+              disabled={isDownloadDisabled}
+            >
+              <MdInsertDriveFile className="inline-block mr-2 text-xl" />{" "}
+              Download CSV
+            </button>
+
             <button
               onClick={closeModal}
               className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-6 rounded-md focus:outline-none focus:shadow-outline-gray active:bg-gray-400"

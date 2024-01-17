@@ -1,6 +1,7 @@
 import { useGetAllAssetBookValueQuery } from "@/redux/assetBookValue/assetBookValueApi";
 import { useCreateSelectedBookValueReportMutation } from "@/redux/bookValueReport/bookvValueReport";
 import FileSaver from "file-saver";
+import Papa from "papaparse";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -58,7 +59,7 @@ const SelectedAssetBookValueReport = () => {
     setIsModalOpen(false);
   };
 
-  const generateExcel = (responseArray) => {
+  const generateData = (responseArray) => {
     const dataForExcelData = responseArray
       .map((item) => {
         const {
@@ -146,22 +147,23 @@ const SelectedAssetBookValueReport = () => {
     }
   };
 
-  const onSubmit = async (data) => {
-    const selectedTerminalIds = Array.from(
-      event.target.assetBookValue.selectedOptions
-    ).map((option) => option.value);
+  const onSubmit = async (formData) => {
+    const selectedTerminalIds = formData.assetBookValue
+      ? Object.entries(formData.assetBookValue)
+          .filter(([key, value]) => value)
+          .map(([key, value]) => key)
+      : [];
 
     const bookValueData = {
       selectedAssetBookValueIds: selectedTerminalIds,
-      reportingDate: data.reportingDate,
+      reportingDate: formData.reportingDate,
     };
 
     try {
       const response = await createSelectedBookValue(bookValueData);
 
       if (response?.data?.statusCode === 200) {
-        toast.success("BoothAcquisition updated successfully");
-        generateExcel(response.data.data);
+        generateData(response.data.data);
       } else {
         toast.error("Something went wrong");
       }
@@ -170,7 +172,7 @@ const SelectedAssetBookValueReport = () => {
     }
   };
 
-  const handleDownload = () => {
+  const downloadExcel = () => {
     closeModal();
 
     const filteredDataForExcel =
@@ -200,6 +202,45 @@ const SelectedAssetBookValueReport = () => {
     toast.success("Downloaded Successfully");
   };
 
+  const downloadCSV = () => {
+    closeModal();
+
+    const filteredDataForCSV =
+      dataForExcel.length > 0
+        ? dataForExcel.map((item) => {
+            const filteredItem = {};
+            for (const field of selectedFields) {
+              filteredItem[field] = item[field];
+            }
+            return filteredItem;
+          })
+        : [];
+
+    const csv = Papa.unparse(filteredDataForCSV, {
+      header: true,
+      delimiter: ",", // You can change the delimiter if needed
+    });
+
+    const dataBlob = new Blob([csv], {
+      type: "text/csv;charset=utf-8",
+    });
+    FileSaver.saveAs(dataBlob, "BookValueReport.csv");
+
+    toast.success("Downloaded Successfully");
+  };
+
+  const handleCheckboxChange = (field) => {
+    setSelectedFields((prevSelectedFields) => {
+      if (prevSelectedFields.includes(field)) {
+        return prevSelectedFields.filter(
+          (selectedField) => selectedField !== field
+        );
+      } else {
+        return [...prevSelectedFields, field];
+      }
+    });
+  };
+
   const isDownloadDisabled = selectedFields.length === 0;
 
   return (
@@ -208,31 +249,41 @@ const SelectedAssetBookValueReport = () => {
         className="w-full max-w-md mx-auto p-4 shadow-lg rounded-lg bg-white"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <h1 className="text-xl text-bold my-2">
-          Select many book value report
-        </h1>
+        <h1 className="text-xl text-bold my-2">Generate Book Value Report</h1>
         <div className="form-control mb-3">
           <label className="label">
             <span className="label-text">Select your Terminal</span>
           </label>
-          <select
-            {...register("assetBookValue", {
-              required: "At least one terminal is required",
-            })}
-            className="select select-bordered select-primary w-full"
-            multiple
-          >
-            <option value="">Select your terminals</option>
-            {assetBookValueData &&
-              assetBookValueData.map((assetBookValue) => (
-                <option key={assetBookValue.id} value={assetBookValue.id}>
-                  {assetBookValue?.terminal?.terminalNameAndId}
-                </option>
-              ))}
-          </select>
-          {errors.assetBookValue && (
-            <p className="text-red-500">{errors.assetBookValue.message}</p>
-          )}
+
+          <div className="dropdown dropdown-hover ">
+            <div
+              tabIndex="0"
+              className="m-1 btn select select-bordered select-primary w-full"
+            >
+              Choose Terminals
+            </div>
+            <ul
+              tabIndex="0"
+              className="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-full"
+            >
+              {assetBookValueData &&
+                assetBookValueData.map((assetBookValue) => (
+                  <li key={assetBookValue.id}>
+                    <label className="label flex justify-start cursor-pointer">
+                      <input
+                        type="checkbox"
+                        {...register(`assetBookValue.${assetBookValue.id}`)}
+                        value={assetBookValue.id}
+                        className="checkbox checkbox-primary"
+                      />
+                      <span className="label-text">
+                        {assetBookValue?.terminal?.terminalNameAndId}
+                      </span>
+                    </label>
+                  </li>
+                ))}
+            </ul>
+          </div>
 
           {errors.assetBookValue && (
             <p className="text-red-500">{errors.assetBookValue.message}</p>
@@ -296,6 +347,7 @@ const SelectedAssetBookValueReport = () => {
             Select All
           </label>
         </div>
+
         <div className="flex flex-wrap">
           {dataForExcel.length > 0 &&
             Object.keys(dataForExcel[0]).map((field) => (
@@ -312,16 +364,28 @@ const SelectedAssetBookValueReport = () => {
               </div>
             ))}
         </div>
+
         <div className="flex justify-end mt-8">
           <button
-            onClick={handleDownload}
+            onClick={downloadExcel}
             className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 mr-4 rounded-md focus:outline-none focus:shadow-outline-blue ${
               isDownloadDisabled && "opacity-50 cursor-not-allowed"
             } active:bg-blue-800`}
             disabled={isDownloadDisabled}
           >
-            Download
+            Download Excel
           </button>
+
+          <button
+            onClick={downloadCSV}
+            className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 mr-4 rounded-md focus:outline-none focus:shadow-outline-blue ${
+              isDownloadDisabled && "opacity-50 cursor-not-allowed"
+            } active:bg-blue-800`}
+            disabled={isDownloadDisabled}
+          >
+            Download CSV
+          </button>
+
           <button
             onClick={closeModal}
             className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-6 rounded-md focus:outline-none focus:shadow-outline-gray active:bg-gray-400"

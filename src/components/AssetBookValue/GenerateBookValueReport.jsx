@@ -1,6 +1,5 @@
 import AllAssetBookValueReport from "./AllAssetBookValueReport";
 import SelectedAssetBookValueReport from "./SelectedAssetBookValueReport";
-import SingleBookValueReport from "./SingleBookValueReport";
 
 const GenerateBookValueReport = () => {
   return (
@@ -10,19 +9,12 @@ const GenerateBookValueReport = () => {
       </h2>
 
       <div className="flex flex-wrap gap-4 justify-center items-start">
-        {/* Create Single Book Value */}
-        <div className="flex-grow">
-          <SingleBookValueReport />
-        </div>
-
-        {/* Create All Book Value */}
-        <div className="flex-grow">
-          <AllAssetBookValueReport />
-        </div>
-
-        {/* Selected Book Value */}
         <div className="flex-grow">
           <SelectedAssetBookValueReport />
+        </div>
+
+        <div className="flex-grow">
+          <AllAssetBookValueReport />
         </div>
       </div>
     </div>

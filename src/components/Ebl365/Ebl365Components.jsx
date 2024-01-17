@@ -3,6 +3,7 @@ import {
   useGetAllEbl365Query,
 } from "@/redux/ebl365/ebl365Api";
 import Link from "next/link";
+import Papa from "papaparse";
 import { useEffect, useState } from "react";
 import { default as DataTable } from "react-data-table-component";
 import toast from "react-hot-toast";
@@ -238,7 +239,12 @@ export default function Ebl365Components() {
     });
   };
 
-  const handleDownload = () => {
+  const exportExcel = () => {
+    if (selectedFields.length === 0) {
+      toast.error("Select a field first");
+      return;
+    }
+
     closeModal();
 
     const dataToExport = dataForExcel.map((row) =>
@@ -263,6 +269,36 @@ export default function Ebl365Components() {
     const fileName = "selected-rows-export.xlsx";
 
     XLSX.writeFile(workbook, fileName);
+
+    toast.success("Downloaded Successfully");
+  };
+
+  const exportCsv = () => {
+    if (selectedFields.length === 0) {
+      toast.error("Select a field first");
+      return;
+    }
+
+    closeModal();
+
+    const dataToExport = dataForExcel.map((row) =>
+      selectedFields.reduce((acc, field) => {
+        if (row[field] !== undefined) acc[field] = row[field];
+        return acc;
+      }, {})
+    );
+
+    const csvData = Papa.unparse(dataToExport, { header: true });
+
+    const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "selected-rows-export.csv";
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
     toast.success("Downloaded Successfully");
   };
@@ -299,7 +335,7 @@ export default function Ebl365Components() {
           onClick={openModal}
         >
           <FaFileExcel className="mr-1" />
-          Download Excel
+          Download
         </button>
       </div>
     );
@@ -311,7 +347,7 @@ export default function Ebl365Components() {
         <LoadingScreen />
       ) : (
         <section className="md:px-5">
-          <div className="w-full  m-auto overflow-x-auto  shadow-bottom shadow-md ">
+          <div className="w-full m-auto  overflow-x-auto">
             <DataTable
               title="EBL 365"
               columns={columns}
@@ -392,10 +428,17 @@ export default function Ebl365Components() {
             </div>
             <div className="flex justify-end mt-8">
               <button
-                onClick={handleDownload}
+                onClick={exportExcel}
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 mr-4 rounded-md focus:outline-none focus:shadow-outline-blu"
               >
-                Download
+                EXCEL
+              </button>
+
+              <button
+                onClick={exportCsv}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 mr-4 rounded-md focus:outline-none focus:shadow-outline-blu"
+              >
+                CSV
               </button>
               <button
                 onClick={closeModal}
@@ -413,10 +456,10 @@ export default function Ebl365Components() {
               className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border border-primary shadow-2xl p-4 sm:p-6 md:p-8 bg-white rounded-lg w-full sm:w-auto sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg"
             >
               <button
-                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none"
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none "
                 onClick={() => setSelectedUpdateBooth(null)}
               >
-                Close
+                X Close
               </button>
               <div style={{ maxHeight: "90vh" }} className="overflow-y-auto">
                 <Update365Form selectedUpdateBooth={selectedUpdateBooth} />

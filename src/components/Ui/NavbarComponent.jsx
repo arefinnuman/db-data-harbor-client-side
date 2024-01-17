@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Typewriter } from "react-simple-typewriter";
 import LoadingScreen from "./LoadingScreen";
+import LogoutScreen from "./LogoutScreen";
 
 const NavbarComponent = () => {
   const dispatch = useDispatch();
@@ -26,13 +27,22 @@ const NavbarComponent = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
   const handleLogout = () => {
+    setIsLoggingOut(true);
+
     setTimeout(() => {
       dispatch(removeUser());
+      localStorage.removeItem("token");
       router.push("/login");
-      setLoading(false);
+      setIsLoggingOut(false);
     }, 1000);
   };
+
+  if (isLoggingOut) {
+    return <LogoutScreen />;
+  }
 
   const menuItems = {
     "Ebl 365": "/ebl-365",
