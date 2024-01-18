@@ -177,7 +177,7 @@ const BoothAcquisitionComponent = () => {
       name: "Details",
       cell: (row) => (
         <Link
-          href={`/ebl-365/${row._id}`}
+          href={`/booth-acquisition/${row._id}`}
           className="flex items-center text-gray-500 hover:text-blue-500 transition-all duration-300 transform hover:scale-105"
         >
           <span className="mr-2 border-b border-transparent hover:border-black hover:shadow-md">
@@ -423,7 +423,7 @@ const BoothAcquisitionComponent = () => {
           {user?.role === "admin" || user?.role === "super_admin" ? (
             <div>
               <Link
-                href="/ebl-365/create"
+                href="/booth-acquisition/create"
                 className="flex items-center justify-center bg-blue-500 text-white py-2 px-4 rounded shadow hover:bg-blue-600 transition-colors"
               >
                 <FaPlus className="mr-2" /> Create

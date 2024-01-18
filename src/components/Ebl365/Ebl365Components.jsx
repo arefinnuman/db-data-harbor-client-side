@@ -81,19 +81,6 @@ export default function Ebl365Components() {
     ...(user?.role === "admin" || user?.role === "super_admin"
       ? [
           {
-            name: "Edit",
-            cell: (row) => (
-              <button
-                onClick={() => setSelectedUpdateBooth(row)}
-                className="text-blue-500 hover:bg-blue-100 p-2 rounded transition-all duration-300 transform hover:scale-105"
-              >
-                <span className="mr-2 border-b border-transparent hover:border-blue-500 hover:shadow-md">
-                  Edit
-                </span>
-              </button>
-            ),
-          },
-          {
             name: "Delete",
             cell: (row) => (
               <button
