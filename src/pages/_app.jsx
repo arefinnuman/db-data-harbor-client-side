@@ -40,7 +40,7 @@ export default function App({ Component, pageProps }) {
       <div className={poppins.className}>
         <Provider store={store}>
           <InitUser>{getLayout(<Component {...pageProps} />)}</InitUser>
-          <Toaster />
+          <Toaster position="bottom-right" />
         </Provider>
       </div>
     </>

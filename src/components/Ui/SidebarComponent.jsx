@@ -11,7 +11,7 @@ function SidebarComponent() {
   ];
 
   return (
-    <div className="hidden md:flex md:w-64 lg:w-72 h-screen bg-gray-200 text-gray-800 flex-col">
+    <div className="hidden md:flex md:w-64 lg:w-72  bg-gray-200 text-gray-800 flex-col">
       <ul className="flex flex-col py-4">
         {navbarItems.map((item, index) => (
           <li
