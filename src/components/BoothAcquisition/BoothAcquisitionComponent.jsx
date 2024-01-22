@@ -459,7 +459,7 @@ const BoothAcquisitionComponent = () => {
       {isLoading ? (
         <LoadingScreen />
       ) : (
-        <section className="px-6">
+        <section className="md:px-5">
           <div className="w-full m-auto  overflow-x-auto">
             <DataTable
               title="EBL Booths Acquisition"

@@ -382,7 +382,7 @@ const AssetBookValueComponent = () => {
       {isLoading ? (
         <LoadingScreen />
       ) : (
-        <section className="px-6">
+        <section className="md:px-6">
           <div className="w-full m-auto  overflow-x-auto">
             <DataTable
               title="ASSET BOOK VALUE"

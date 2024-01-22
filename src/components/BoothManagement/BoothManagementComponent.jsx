@@ -390,7 +390,7 @@ const BoothManagementComponent = () => {
         <section className="md:px-5">
           <div className="w-full m-auto  overflow-x-auto">
             <DataTable
-              title="EBL 365"
+              title="EBL 365 Booth Management"
               columns={columns}
               data={filteredData || []}
               pagination

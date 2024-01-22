@@ -117,70 +117,70 @@ const DetailsSection = () => {
   };
 
   const renderCard = (image, title, data, dataType, linkHref) => (
-    <div className="card w-96 bg-base-100 shadow-xl image-full">
-      <figure>
-        <Image src={image} alt={title} width={400} height={50} className="" />
-      </figure>
-      <div className="card-body">
-        <h2 className="card-title">{title}</h2>
-        <div className="text-lg text-gray-600">
-          {renderSummary(data, dataType)}
-        </div>
-        <div className="card-actions justify-end">
-          <Link className=" btn btn-primary" href={linkHref}>
-            View
-          </Link>
-        </div>
+    <Link href={linkHref} className="block">
+      <div className="card max-w-full bg-base-100 shadow-xl overflow-hidden group cursor-pointer">
+        <figure className="relative">
+          <Image
+            src={image}
+            alt={title}
+            layout="responsive"
+            width={500}
+            height={200}
+          />
+          <div className="absolute top-0 left-0 w-full p-4 bg-gradient-to-b from-black via-transparent to-transparent">
+            <h2 className="card-title text-white">{title}</h2>
+          </div>
+
+          <div className="absolute inset-0 flex flex-col justify-end p-4 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="text-lg text-gray-300 mb-4">
+              {renderSummary(data, dataType)}
+            </div>
+          </div>
+        </figure>
       </div>
-    </div>
+    </Link>
   );
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">
+    <div className="container mx-auto">
+      <h1 className="text-2xl font-bold mb-6 md:mx-4">
         A Visual Guide to Business Operations and Metrics
       </h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 p-2 md:mx-4">
+        {renderCard(ebl365Image, "EBL 365", ebl365Data, "Ebl365", "/ebl-365")}
         {renderCard(
-          assetBookValueImage,
-          "Asset Book Value",
-          assetBookValueData,
-          "AssetBookValue",
-          "/asset-book-value"
+          terminalImage,
+          "Terminals",
+          terminalData,
+          "Terminals",
+          "/terminals"
         )}
         {renderCard(
           boothAcquisitionImage,
           "Booth Acquisition",
           boothAcquisitionData,
           "BoothAcquisition",
-          "/asset-book-value"
+          "/booth-acquisition"
         )}
         {renderCard(
           boothManagementImage,
           "Booth Management",
           boothManagementData,
           "BoothManagement",
-          "/asset-book-value"
-        )}
-        {renderCard(
-          ebl365Image,
-          "EBL 365",
-          ebl365Data,
-          "Ebl365",
-          "/asset-book-value"
-        )}
-        {renderCard(
-          terminalImage,
-          "Terminals",
-          terminalData,
-          "Terminals",
-          "/asset-book-value"
+          "/booth-management"
         )}
         {renderCard(
           issueFormImage,
           "Issue Form",
           issueFormData,
           "IssueForm",
+          "/issue-form"
+        )}
+        {renderCard(
+          assetBookValueImage,
+          "Asset Book Value",
+          assetBookValueData,
+          "AssetBookValue",
           "/asset-book-value"
         )}
       </div>

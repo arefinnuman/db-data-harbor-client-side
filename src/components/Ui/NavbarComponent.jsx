@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-
 import logo from "@/assets/logo.gif";
 import { removeUser } from "@/redux/auth/authSlice";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { FaCube, FaHome, FaTasks, FaTerminal, FaWpforms } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { Typewriter } from "react-simple-typewriter";
 import LogoutScreen from "./LogoutScreen";
@@ -52,14 +52,14 @@ const NavbarComponent = () => {
     return <LogoutScreen />;
   }
 
-  const menuItems = {
-    "Ebl 365": "/ebl-365",
-    Terminals: "/terminals",
-    "Booth Acquisition": "/booth-acquisition",
-    "Booth Management": "/booth-management",
-    "Issue Form": "/issue-form",
-    "Asset Book Value": "/asset-book-value",
-  };
+  const navbarItems = [
+    { href: "/ebl-365", label: "Ebl 365", Icon: FaHome },
+    { href: "/terminals", label: "Terminals", Icon: FaTerminal },
+    { href: "/booth-acquisition", label: "Booth Acquisition", Icon: FaCube },
+    { href: "/booth-management", label: "Booth Management", Icon: FaTasks },
+    { href: "/issue-form", label: "Issue Form", Icon: FaWpforms },
+    { href: "/asset-book-value", label: "Asset Book Value", Icon: FaWpforms },
+  ];
 
   return (
     <div>
@@ -67,10 +67,11 @@ const NavbarComponent = () => {
         <div className="navbar bg-blue-200 h-14">
           <div className="navbar-start">
             <div className="dropdown">
-              <button
-                aria-label="Open Menu"
+              <div
+                tabIndex={0}
+                role="button"
                 className="btn btn-ghost lg:hidden"
-                onClick={toggleDropdown} // Toggle the dropdown on button click
+                onClick={toggleDropdown}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -86,21 +87,25 @@ const NavbarComponent = () => {
                     d="M4 6h16M4 12h8m-8 6h16"
                   />
                 </svg>
-              </button>
+              </div>
               <ul
-                aria-labelledby="dropdown-button"
-                className={`menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow rounded-box w-52 bg-gray-100 ${
+                tabIndex="0"
+                className={`menu  dropdown-content mt-2 z-10 shadow-lg rounded-md w-60 ${
                   isOpen ? "block" : "hidden"
-                }`}
+                } bg-white text-gray-700`}
               >
-                {Object.keys(menuItems).map((item, index) => (
-                  <li key={index}>
+                {navbarItems.map((item, index) => (
+                  <li
+                    key={index}
+                    className="hover:bg-gray-100 p-1 rounded-md transition duration-200 ease-in-out"
+                    onClick={handleMenuItemClick}
+                  >
                     <Link
-                      href={menuItems[item]}
-                      className="hover:bg-gray-200 transition-transform ease-in duration-200 text-lg"
-                      onClick={handleMenuItemClick} // Close the dropdown when an item is clicked
+                      href={item.href}
+                      className="flex items-center justify-start text-md hover:bg-blue-200 pl-4 w-full"
                     >
-                      {item}
+                      <item.Icon className="mr-2" />
+                      {item.label}
                     </Link>
                   </li>
                 ))}

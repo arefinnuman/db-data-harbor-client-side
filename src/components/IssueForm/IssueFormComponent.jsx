@@ -502,7 +502,7 @@ const IssueFormComponent = () => {
       {isLoading ? (
         <LoadingScreen />
       ) : (
-        <section className="px-6">
+        <section className="md:px-6">
           <div className="w-full m-auto  overflow-x-auto">
             <DataTable
               title="EBL 365 ISSUE FORM"
