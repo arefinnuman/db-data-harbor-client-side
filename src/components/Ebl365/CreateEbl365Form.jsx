@@ -37,7 +37,7 @@ const CreateEbl365Form = () => {
       const response = await createEbl365(ebl365Data);
 
       if (response?.data?.statusCode === 200) {
-        toast.success("ebl365 updated successfully");
+        toast.success("Ebl365 created successfully");
         window.location.reload();
       } else {
         toast.error("Something went wrong");

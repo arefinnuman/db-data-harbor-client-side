@@ -1,17 +1,18 @@
+/* eslint-disable @next/next/no-img-element */
 import { useGetAllAssetBookValueQuery } from "@/redux/assetBookValue/assetBookValueApi";
 import { useGetAllBoothAcquisitionQuery } from "@/redux/boothAcquisition/boothAcquisitionApi";
 import { useGetAllBoothManagementQuery } from "@/redux/boothManagement/bothManagementApi";
 import { useGetAllEbl365Query } from "@/redux/ebl365/ebl365Api";
 import { useGetAllIssueFormQuery } from "@/redux/issueForm/issueFormApi";
 import { useGetAllTerminalsQuery } from "@/redux/terminals/terminalApi";
-import {
-  FaBook,
-  FaBroadcastTower,
-  FaExclamationCircle,
-  FaStoreAlt,
-  FaTerminal,
-  FaTools,
-} from "react-icons/fa";
+import Image from "next/image";
+import Link from "next/link";
+import assetBookValueImage from "../../assets/AssetBookValue.png";
+import boothAcquisitionImage from "../../assets/BoothAcquisition.png";
+import boothManagementImage from "../../assets/BoothManagement.png";
+import ebl365Image from "../../assets/Ebl365.png";
+import issueFormImage from "../../assets/IssueForm.png";
+import terminalImage from "../../assets/Terminals.png";
 
 const DetailsSection = () => {
   const { data: assetBookValue } = useGetAllAssetBookValueQuery(undefined, {
@@ -102,23 +103,34 @@ const DetailsSection = () => {
     }
 
     return (
-      <div className="space-y-1">
+      <div className="transition-shadow duration-300 ease-in-out">
         <div>
-          <p className="text-center">Most Recent: {recentItemName}</p>
-        </div>
-        <div className="text-gray-500 text-sm text-center italic">
-          {formattedDate}
+          <div className="flex items-center space-x-2">
+            <p className="text-sm font-semibold text-white">
+              Recent Added: <span className="">{recentItemName}</span>
+            </p>
+          </div>
+          <p className="text-xs font-light text-white">{formattedDate}</p>
         </div>
       </div>
     );
   };
 
-  const renderCard = (icon, title, data, dataType) => (
-    <div className="group relative overflow-hidden flex flex-col items-center justify-center p-6 border rounded-lg shadow-lg hover:shadow-2xl transform hover:scale-105 transition-transform duration-300">
-      {icon}
-      <h3 className="text-xl font-bold mt-4 mb-2 text-gray-800">{title}</h3>
-      <div className="text-lg text-gray-700">
-        {renderSummary(data, dataType)}
+  const renderCard = (image, title, data, dataType, linkHref) => (
+    <div className="card w-96 bg-base-100 shadow-xl image-full">
+      <figure>
+        <Image src={image} alt={title} width={400} height={50} className="" />
+      </figure>
+      <div className="card-body">
+        <h2 className="card-title">{title}</h2>
+        <div className="text-lg text-gray-600">
+          {renderSummary(data, dataType)}
+        </div>
+        <div className="card-actions justify-end">
+          <Link className=" btn btn-primary" href={linkHref}>
+            View
+          </Link>
+        </div>
       </div>
     </div>
   );
@@ -130,40 +142,46 @@ const DetailsSection = () => {
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {renderCard(
-          <FaBook className="text-5xl text-indigo-600" />,
+          assetBookValueImage,
           "Asset Book Value",
           assetBookValueData,
-          "AssetBookValue"
+          "AssetBookValue",
+          "/asset-book-value"
         )}
         {renderCard(
-          <FaStoreAlt className="text-5xl text-green-600" />,
+          boothAcquisitionImage,
           "Booth Acquisition",
           boothAcquisitionData,
-          "BoothAcquisition"
+          "BoothAcquisition",
+          "/asset-book-value"
         )}
         {renderCard(
-          <FaTools className="text-5xl text-blue-600" />,
+          boothManagementImage,
           "Booth Management",
           boothManagementData,
-          "BoothManagement"
+          "BoothManagement",
+          "/asset-book-value"
         )}
         {renderCard(
-          <FaBroadcastTower className="text-5xl text-red-600" />,
+          ebl365Image,
           "EBL 365",
           ebl365Data,
-          "Ebl365"
+          "Ebl365",
+          "/asset-book-value"
         )}
         {renderCard(
-          <FaTerminal className="text-5xl text-orange-600" />,
+          terminalImage,
           "Terminals",
           terminalData,
-          "Terminals"
+          "Terminals",
+          "/asset-book-value"
         )}
         {renderCard(
-          <FaExclamationCircle className="text-5xl text-yellow-600" />,
+          issueFormImage,
           "Issue Form",
           issueFormData,
-          "IssueForm"
+          "IssueForm",
+          "/asset-book-value"
         )}
       </div>
     </div>

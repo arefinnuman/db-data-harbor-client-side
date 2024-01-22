@@ -39,7 +39,7 @@ export default function Update365Form({ selectedUpdateBooth }) {
     const response = await updateBooth(ebl365Data);
 
     if (response?.data?.statusCode === 200) {
-      toast.success("ebl365 updated successfully");
+      toast.success("Updated successfully");
       window.location.reload();
     } else {
       toast.error("Something went wrong");

@@ -35,7 +35,7 @@ const AssetBookValueComponent = () => {
   const handleDelete365assetBookValue = async () => {
     try {
       await delete365assetBookValue(assetBookValueToDelete);
-      toast.success("assetBookValue deleted successfully");
+      toast.success("Asset Book Value deleted successfully");
       refetch();
       setShowDeleteConfirmation(false);
     } catch (error) {

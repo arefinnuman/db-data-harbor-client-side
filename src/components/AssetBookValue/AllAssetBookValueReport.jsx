@@ -217,7 +217,7 @@ const AllAssetBookValueReport = () => {
 
     FileSaver.saveAs(dataBlob, "BookValueReport.csv");
 
-    toast.success("CSV Downloaded Successfully");
+    toast.success("Downloaded Successfully");
   };
 
   const isDownloadDisabled = selectedFields.length === 0;

@@ -36,7 +36,7 @@ const CreateBoothAcquisitionForm = () => {
     try {
       const response = await createBoothAcquisition(boothAcquisitionData);
       if (response?.data?.statusCode === 200) {
-        toast.success("BoothAcquisition updated successfully");
+        toast.success("Booth Acquisition created successfully");
         window.location.reload();
       } else {
         toast.error("Something went wrong");

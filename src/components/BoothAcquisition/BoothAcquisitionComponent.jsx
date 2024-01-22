@@ -45,7 +45,7 @@ const BoothAcquisitionComponent = () => {
   const handleDelete365boothAcquisition = async () => {
     try {
       await delete365boothAcquisition(boothAcquisitionToDelete);
-      toast.success("boothAcquisition deleted successfully");
+      toast.success("Booth Acquisition deleted successfully");
       refetch();
       setShowDeleteConfirmation(false);
     } catch (error) {
@@ -152,7 +152,7 @@ const BoothAcquisitionComponent = () => {
       cell: (row) => (
         <a
           className="text-sm hover:text-blue-500 flex items-center space-x-2 transition-colors duration-300 transform hover:scale-105"
-          href={`http://localhost:5555/${row.boardMemo}`}
+          href={`https://db-data-harbor-server-side.vercel.app/${row.boardMemo}`}
           download
         >
           <FaDownload className="mr-2" size={20} /> Download
@@ -166,7 +166,7 @@ const BoothAcquisitionComponent = () => {
       cell: (row) => (
         <a
           className="text-sm hover:text-blue-500 flex items-center space-x-2 transition-colors duration-300 transform hover:scale-105"
-          href={`http://localhost:5555/${row.agreementBetweenEblAndBoothOwner}`}
+          href={`https://db-data-harbor-server-side.vercel.app/${row.agreementBetweenEblAndBoothOwner}`}
           download
         >
           <FaDownload className="mr-2" size={20} /> Download

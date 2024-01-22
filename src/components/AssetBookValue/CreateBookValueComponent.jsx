@@ -29,7 +29,7 @@ const CreateBookValueComponent = () => {
     try {
       const response = await createBookValue(bookValueData);
       if (response?.data?.statusCode === 200) {
-        toast.success("BoothAcquisition updated successfully");
+        toast.success("Booth Acquisition created successfully");
         window.location.reload();
       } else {
         toast.error("Something went wrong");
@@ -132,7 +132,7 @@ const CreateBookValueComponent = () => {
               <span className="label-text">First Deployment Date</span>
             </label>
             <input
-              type="date" 
+              type="date"
               {...register("firstDeploymentDate", {
                 required: "First Deployment Date is required",
               })}
@@ -151,7 +151,7 @@ const CreateBookValueComponent = () => {
               <span className="label-text">Date of Purchase</span>
             </label>
             <input
-              type="date" 
+              type="date"
               {...register("dateOfPurchase", {
                 required: "Date of Purchase is required",
               })}

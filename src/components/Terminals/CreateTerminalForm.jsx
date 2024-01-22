@@ -45,7 +45,7 @@ const CreateTerminalForm = () => {
     try {
       const response = await createTerminal(terminalData);
       if (response?.data?.statusCode === 200) {
-        toast.success("Terminal updated successfully");
+        toast.success("Terminal created successfully");
         window.location.reload();
       } else {
         toast.error("Something went wrong");

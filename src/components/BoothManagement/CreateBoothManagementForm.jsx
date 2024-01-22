@@ -30,7 +30,7 @@ const CreateBoothManagementForm = () => {
     try {
       const response = await createBoothManagement(boothManagementData);
       if (response?.data?.statusCode === 200) {
-        toast.success("BoothManagement updated successfully");
+        toast.success("BoothManagement created successfully");
         window.location.reload();
       } else if (response?.error?.status === 400) {
         toast.error(response?.error?.data?.message);

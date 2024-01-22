@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { FaCube, FaHome, FaTasks, FaTerminal, FaWpforms } from "react-icons/fa";
 
 function SidebarComponent() {
@@ -16,15 +17,15 @@ function SidebarComponent() {
         {navbarItems.map((item, index) => (
           <li
             key={index}
-            className="flex flex-row items-center h-12 hover:bg-blue-200 transition-transform ease-in duration-200"
+            className="flex flex-row items-center h-12 hover:bg-blue-200 transition-transform ease-in "
           >
-            <a
+            <Link
               href={item.href}
               className="flex items-center justify-start text-md pl-4 w-full"
             >
               <item.Icon className="w-6 h-6 text-blue-500" />
               <span className="ml-2">{item.label}</span>
-            </a>
+            </Link>
           </li>
         ))}
       </ul>

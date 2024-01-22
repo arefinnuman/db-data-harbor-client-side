@@ -45,7 +45,7 @@ const UpdateTerminalForm = ({ selectedUpdateTerminal }) => {
 
     const response = await updateTerminal(terminalData);
     if (response?.data?.statusCode === 200) {
-      toast.success("ebl365 updated successfully");
+      toast.success("Ebl 365 updated successfully");
       window.location.reload();
     } else {
       toast.error("Something went wrong");

@@ -44,7 +44,7 @@ const BoothManagementComponent = () => {
   const handleDelete365boothManagement = async () => {
     try {
       await delete365boothManagement(boothManagementToDelete);
-      toast.success("boothManagement deleted successfully");
+      toast.success("Booth Management deleted successfully");
       refetch();
       setShowDeleteConfirmation(false);
     } catch (error) {
