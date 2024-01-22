@@ -1,12 +1,6 @@
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useState } from "react";
 import { FaCube, FaHome, FaTasks, FaTerminal, FaWpforms } from "react-icons/fa";
 
 function SidebarComponent() {
-  const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
-
   const navbarItems = [
     { href: "/ebl-365", label: "Ebl 365", Icon: FaHome },
     { href: "/terminals", label: "Terminals", Icon: FaTerminal },
@@ -17,31 +11,23 @@ function SidebarComponent() {
   ];
 
   return (
-    <div className="relative">
-      <aside
-        className={`bg-white shadow-lg transform top-0 left-0 w-64 min-h-screen fixed lg:relative transition-transform duration-200 ease-in-out ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 overflow-y-auto`}
-      >
-        <ul className="divide-y divide-gray-200">
-          {navbarItems.map((item, index) => (
-            <li
-              key={index}
-              className={`hover:bg-blue-500 transition-colors duration-200 ${
-                router.pathname === item.href ? "bg-blue-200" : ""
-              }`}
+    <div className="hidden md:flex md:w-64 lg:w-72 h-screen bg-gray-200 text-gray-800 flex-col">
+      <ul className="flex flex-col py-4">
+        {navbarItems.map((item, index) => (
+          <li
+            key={index}
+            className="flex flex-row items-center h-12 hover:bg-blue-200 transition-transform ease-in duration-200"
+          >
+            <a
+              href={item.href}
+              className="flex items-center justify-start text-md pl-4 w-full"
             >
-              <Link
-                href={item.href}
-                className="flex items-center gap-4 p-4 text-gray-800 hover:text-white"
-              >
-                <item.Icon className="h-5 w-5" aria-hidden="true" />
-                {item.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </aside>
+              <item.Icon className="w-6 h-6 text-blue-500" />
+              <span className="ml-2">{item.label}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

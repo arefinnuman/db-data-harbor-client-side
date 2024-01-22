@@ -29,6 +29,16 @@ const NavbarComponent = () => {
 
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleMenuItemClick = () => {
+    setIsOpen(false);
+  };
+
   const handleLogout = () => {
     setIsLoggingOut(true);
 
@@ -58,11 +68,15 @@ const NavbarComponent = () => {
       {loading ? (
         <LoadingScreen />
       ) : (
-        <section className="bg-gradient-to-r from-blue-200 via-yellow-300 to-pink-200 h-16">
-          <div className="navbar bg-gradient-to-r from-blue-200 via-yellow-300 to-pink-200 h-14">
+        <section>
+          <div className="navbar bg-blue-200 h-14">
             <div className="navbar-start">
               <div className="dropdown">
-                <label tabIndex={0} className="btn btn-ghost lg:hidden">
+                <button
+                  aria-label="Open Menu"
+                  className="btn btn-ghost lg:hidden"
+                  onClick={toggleDropdown} // Toggle the dropdown on button click
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-5 w-5"
@@ -77,14 +91,28 @@ const NavbarComponent = () => {
                       d="M4 6h16M4 12h8m-8 6h16"
                     />
                   </svg>
-                </label>
+                </button>
                 <ul
-                  tabIndex={0}
-                  className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+                  // Make the dropdown accessible
+                  aria-labelledby="dropdown-button"
+                  className={`menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow rounded-box w-52 bg-gray-100 ${
+                    isOpen ? "block" : "hidden"
+                  }`}
                 >
-                  Hello
+                  {Object.keys(menuItems).map((item, index) => (
+                    <li key={index}>
+                      <Link
+                        href={menuItems[item]}
+                        className="hover:bg-gray-200 transition-transform ease-in duration-200 text-lg"
+                        onClick={handleMenuItemClick} // Close the dropdown when an item is clicked
+                      >
+                        {item}
+                      </Link>
+                    </li>
+                  ))}
                 </ul>
               </div>
+
               <Link href="/">
                 <Image src={logo} alt="logo" width={200} height={100} />
               </Link>
@@ -92,7 +120,7 @@ const NavbarComponent = () => {
             <div className="navbar-center hidden lg:flex">
               <ul className="menu menu-horizontal px-1">
                 <div>
-                  <span className="font-bold text-xl text-neutral py-2">
+                  <span className="font-bold text-sm text-neutral py-2">
                     <Typewriter
                       words={[
                         "DB Data Harbor",
@@ -112,11 +140,11 @@ const NavbarComponent = () => {
             </div>
             <div className="navbar-end">
               <div>
-                <h1 className="mr-3 text-black">{fullName}</h1>
+                <h1 className="mr-5 hidden md:block font-black">{fullName}</h1>
               </div>
               <button
                 onClick={handleLogout}
-                className="bg-indigo-400 text-white font-semibold py-1 px-4 rounded-full transform transition-transform duration-200 hover:scale-105 focus:scale-95 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-60 shadow-lg"
+                className="bg-yellow-200 text-black font-semibold py-1 px-4 rounded-full transform transition-transform duration-200 hover:scale-105 focus:scale-95 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-60 shadow-lg"
               >
                 Logout
               </button>
